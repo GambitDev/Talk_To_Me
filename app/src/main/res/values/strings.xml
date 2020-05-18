@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Talk To Me</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="phone_number">Phone number</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="register_now">Register Now</string>
+    <string name="register_a_new_account">Register a new account</string>
+    <string name="register">Register</string>
+
+    <string name="verify_your_phone_number">Verify Your Phone Number</string>
+    <string name="verification_msg">A message with your verification code has been sent to the number entered,
+        this should take about a minute</string>
+    <string name="verify">Verify</string>
+    <string name="enter_your_code_here">Enter your code here</string>
+</resources>
