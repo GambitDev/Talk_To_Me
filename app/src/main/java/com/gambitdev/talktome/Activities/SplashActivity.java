@@ -1,12 +1,12 @@
 package com.gambitdev.talktome.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.gambitdev.talktome.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -15,11 +15,15 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this , LoginActivity.class);
-            startActivity(intent);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            Intent goToLogin = new Intent(SplashActivity.this , LoginActivity.class);
+            startActivity(goToLogin);
             finish();
-        }, 1000);
+        } else {
+            Intent goToHome = new Intent(SplashActivity.this , HomeActivity.class);
+            startActivity(goToHome);
+            finish();
+        }
     }
 }

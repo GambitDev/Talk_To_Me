@@ -9,11 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.VerificationActivity"></activity>
-        <activity android:name=".Activities.HomeActivity" />
-        <activity android:name=".Activities.RegisterActivity" />
-        <activity android:name=".Activities.LoginActivity" />
-        <activity android:name=".Activities.SplashActivity">
+        <activity android:name=".Activities.VerificationActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.HomeActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.RegisterActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.LoginActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.SplashActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -10,7 +10,11 @@
 
     <string name="verify_your_phone_number">Verify Your Phone Number</string>
     <string name="verification_msg">A message with your verification code has been sent to the number entered,
-        this should take about a minute</string>
+        this should take about a minute. This process should be automatic,
+        if the app does not add the code automatically, please add it manually.</string>
     <string name="verify">Verify</string>
     <string name="enter_your_code_here">Enter your code here</string>
+
+    <string name="phone_number_error">Please enter a valid phone number</string>
+    <string name="code_error">Please enter a valid code</string>
 </resources>
