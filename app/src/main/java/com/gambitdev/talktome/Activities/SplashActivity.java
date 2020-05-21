@@ -17,8 +17,8 @@ public class SplashActivity extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() == null) {
-            Intent goToLogin = new Intent(SplashActivity.this , LoginActivity.class);
-            startActivity(goToLogin);
+            Intent goToRegister = new Intent(SplashActivity.this , RegisterActivity.class);
+            startActivity(goToRegister);
             finish();
         } else {
             Intent goToHome = new Intent(SplashActivity.this , HomeActivity.class);

@@ -1,13 +1,11 @@
 package com.gambitdev.talktome.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.gambitdev.talktome.R;
 
@@ -22,7 +20,7 @@ public class RegisterActivity extends AppCompatActivity{
         Button registerBtn = findViewById(R.id.register_btn);
         registerBtn.setOnClickListener(v -> {
             String phoneNumber = phoneEt.getText().toString();
-            if (phoneNumber.length() != 10) {
+            if (phoneNumber.isEmpty()) {
                 phoneEt.setError(getResources().getString(R.string.phone_number_error));
             } else {
                 Intent goToVerification = new Intent(RegisterActivity.this , VerificationActivity.class);
