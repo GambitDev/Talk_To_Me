@@ -18,6 +18,13 @@ public class Message{
 
     }
 
+    public Message(String timestamp, String senderUid, String txtMsg, Bitmap imgMsg) {
+        this.timestamp = timestamp;
+        this.senderUid = senderUid;
+        this.txtMsg = txtMsg;
+        this.imgMsg = imgMsg;
+    }
+
     public Message(String txtMsg , String senderUid) {
         this(senderUid);
         this.txtMsg = txtMsg;

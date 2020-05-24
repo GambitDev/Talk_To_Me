@@ -8,16 +8,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Pojo.Message;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.Collections;
+public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.MsgViewHolder> {
 
-public class ChatAdapter extends RecyclerView.Adapter <ChatAdapter.MsgViewHolder> {
-
-    private ArrayList<Message> messages;
     private String userUid;
 
     private static final int USER_TEXT = 0;
@@ -25,25 +23,22 @@ public class ChatAdapter extends RecyclerView.Adapter <ChatAdapter.MsgViewHolder
     private static final int USER_IMG = 2;
     private static final int CONTACT_IMG = 3;
 
-    public ChatAdapter() {
+    public ChatAdapter(FirebaseRecyclerOptions<Message> options) {
+        super(options);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        userUid = mAuth.getCurrentUser().getUid();
-    }
-
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
-        notifyDataSetChanged();
+        if (mAuth.getCurrentUser() != null)
+            userUid = mAuth.getCurrentUser().getUid();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getImgMsg() == null) {
-            if (messages.get(position).getSenderUid().equals(userUid))
+        if (getItem(position).getImgMsg() == null) {
+            if (getItem(position).getSenderUid().equals(userUid))
                 return USER_TEXT;
             else
                 return CONTACT_TEXT;
         } else {
-            if (messages.get(position).getSenderUid().equals(userUid))
+            if (getItem(position).getSenderUid().equals(userUid))
                 return USER_IMG;
             else
                 return CONTACT_IMG;
@@ -68,34 +63,14 @@ public class ChatAdapter extends RecyclerView.Adapter <ChatAdapter.MsgViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MsgViewHolder holder, int position) {
-        Message currentMsg = messages.get(position);
+    protected void onBindViewHolder(@NonNull MsgViewHolder holder, int position, @NonNull Message msg) {
         switch (getItemViewType(position)) {
             case USER_TEXT:
             case CONTACT_TEXT:
                 TextMsgViewHolder viewHolder = (TextMsgViewHolder) holder;
-                viewHolder.msgTv.setText(currentMsg.getTxtMsg());
-                viewHolder.msgTimestamp.setText(currentMsg.getTimestamp());
+                viewHolder.msgTv.setText(msg.getTxtMsg());
+                viewHolder.msgTimestamp.setText(msg.getTimestamp());
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        if (messages == null)
-            return 0;
-        else
-            return messages.size();
-    }
-
-    public void addMsg(Message newMsg) {
-        if (messages != null) {
-            messages.add(newMsg);
-            notifyDataSetChanged();
-        }
-    }
-
-    public boolean isMsgListInitialized() {
-        return messages != null;
     }
 
     static class MsgViewHolder extends RecyclerView.ViewHolder {
