@@ -18,11 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ContactsAdapter;
 import com.gambitdev.talktome.Pojo.Contact;
 import com.gambitdev.talktome.Pojo.User;
 import com.gambitdev.talktome.R;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,13 +35,17 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ContactsFragment extends Fragment  implements EasyPermissions.PermissionCallbacks {
+public class ContactsFragment extends Fragment
+        implements EasyPermissions.PermissionCallbacks,
+        ContactsAdapter.OnContactClick {
 
     private final static int REQUEST_CONTACTS_ACCESS = 0;
     private Context mContext;
 
-    private DatabaseReference reference;
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference reference = reference = db.getReference().child("users");
     private ArrayList<User> users;
+    private ArrayList<Contact> contacts;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -49,8 +53,6 @@ public class ContactsFragment extends Fragment  implements EasyPermissions.Permi
 
     public ContactsFragment(Context mContext) {
         this.mContext = mContext;
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        reference = db.getReference().child("users");
     }
 
     @Override
@@ -65,6 +67,7 @@ public class ContactsFragment extends Fragment  implements EasyPermissions.Permi
         RecyclerView contactList = view.findViewById(R.id.contact_list_container);
         contactList.setLayoutManager(new LinearLayoutManager(mContext));
         ContactsAdapter adapter = new ContactsAdapter();
+        adapter.setClickListener(this);
         contactList.setAdapter(adapter);
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -75,8 +78,12 @@ public class ContactsFragment extends Fragment  implements EasyPermissions.Permi
                     User user = child.getValue(User.class);
                     users.add(user);
                 }
-                ArrayList<Contact> contacts = readContacts(mContext);
-                adapter.setContacts(getRegisteredContacts(contacts , users));
+                requestPermissions();
+                if (contacts != null) {
+                    view.findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                    view.findViewById(R.id.progress_txt).setVisibility(View.GONE);
+                    adapter.setContacts(getRegisteredContacts(contacts, users));
+                }
             }
 
             @Override
@@ -87,19 +94,18 @@ public class ContactsFragment extends Fragment  implements EasyPermissions.Permi
     }
 
     @AfterPermissionGranted(REQUEST_CONTACTS_ACCESS)
-    private ArrayList<Contact> getContacts() {
+    private void requestPermissions() {
         if (EasyPermissions.hasPermissions(mContext , Manifest.permission.READ_CONTACTS)) {
-            return readContacts(mContext);
+            contacts = getContacts(mContext);
         } else {
             EasyPermissions.requestPermissions(this,
                     "Access to your contacts is necessary to use Talk To Me",
                     REQUEST_CONTACTS_ACCESS,
                     Manifest.permission.READ_CONTACTS);
         }
-        return null;
     }
 
-    private ArrayList<Contact> readContacts(Context ctx) {
+    private ArrayList<Contact> getContacts(Context ctx) {
         ArrayList<Contact> list = new ArrayList<>();
         ContentResolver contentResolver = ctx.getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
@@ -163,6 +169,16 @@ public class ContactsFragment extends Fragment  implements EasyPermissions.Permi
     }
 
     @Override
+    public void onDisplayNameClick(String contactUid , String contactName) {
+        ((HomeActivity) mContext).startChat(contactUid , contactName);
+    }
+
+    @Override
+    public void onProfilePicClick() {
+
+    }
+
+    @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
 
     }
@@ -171,4 +187,5 @@ public class ContactsFragment extends Fragment  implements EasyPermissions.Permi
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
 
     }
+
 }

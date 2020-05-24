@@ -17,6 +17,11 @@ import java.util.ArrayList;
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
 
     private ArrayList<Contact> contacts;
+    private OnContactClick clickListener;
+
+    public void setClickListener(OnContactClick clickListener) {
+        this.clickListener = clickListener;
+    }
 
     public void setContacts(ArrayList<Contact> contacts) {
         this.contacts = contacts;
@@ -35,8 +40,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     public void onBindViewHolder(@NonNull ContactsViewHolder holder, int position) {
         Contact currentContact = contacts.get(position);
         holder.contactName.setText(currentContact.getName());
+        holder.contactName.setOnClickListener(v ->
+                clickListener.onDisplayNameClick(currentContact.getUid(),
+                        currentContact.getName())
+        );
         if (currentContact.getProfilePic() != null)
             holder.profilePic.setImageBitmap(currentContact.getProfilePic());
+        holder.profilePic.setOnClickListener(v ->
+                clickListener.onProfilePicClick());
     }
 
     @Override
@@ -52,11 +63,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         ImageView profilePic;
         TextView contactName;
 
-        public ContactsViewHolder(@NonNull View itemView) {
+        ContactsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             profilePic = itemView.findViewById(R.id.profile_pic);
             contactName = itemView.findViewById(R.id.contact_name);
         }
+    }
+
+    public interface OnContactClick {
+        void onDisplayNameClick(String contactUid , String contactName);
+        void onProfilePicClick();
     }
 }

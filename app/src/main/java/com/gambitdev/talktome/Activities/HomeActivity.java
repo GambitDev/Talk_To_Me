@@ -1,48 +1,47 @@
 package com.gambitdev.talktome.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.gambitdev.talktome.Adapters.TabsPagerAdapter;
 import com.gambitdev.talktome.R;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class HomeActivity extends AppCompatActivity {
-
-    private FirebaseAuth mAuth;
-    private TabLayout tabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        initialize();
+        initializeActivity();
     }
 
-    private void initialize() {
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+    private void initializeActivity() {
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(this);
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
-        tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        setTabsIcons();
-
-        mAuth = FirebaseAuth.getInstance();
+        TabLayout tabs = findViewById(R.id.tabs);
+        new TabLayoutMediator(tabs, viewPager , (tab, position) -> {
+            if (position == 0) {
+                tab.setText(R.string.chats);
+                tab.setIcon(R.drawable.ic_chat);
+            } else {
+                tab.setText(R.string.contacts);
+                tab.setIcon(R.drawable.ic_contacts);
+            }
+        }).attach();
     }
 
-    private void setTabsIcons() {
-        tabs.getTabAt(0).setIcon(R.drawable.ic_chat);
-        tabs.getTabAt(1).setIcon(R.drawable.ic_contacts);
+    public void startChat(String contactUid , String contactName) {
+        Intent goToChat = new Intent(HomeActivity.this , ChatActivity.class);
+        goToChat.putExtra("contact_uid" , contactUid);
+        goToChat.putExtra("contact_name" , contactName);
+        startActivity(goToChat);
     }
 }
