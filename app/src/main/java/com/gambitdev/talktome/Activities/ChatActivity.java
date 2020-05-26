@@ -46,9 +46,13 @@ public class ChatActivity extends AppCompatActivity {
         if (contactUid != null) {
             if (mAuth.getCurrentUser() != null) {
                 userChatRef = usersRef.child(mAuth.getCurrentUser().getUid())
-                        .child("chats").child("messages").child(contactUid);
+                        .child("chats").child(contactUid).child("messages");
+                userLastMsgRef = usersRef.child(mAuth.getCurrentUser().getUid())
+                        .child("chats").child(contactUid).child("last_msg");
                 contactChatRef = usersRef.child(contactUid)
-                        .child("chats").child("messages").child(mAuth.getCurrentUser().getUid());
+                        .child("chats").child(mAuth.getCurrentUser().getUid()).child("messages");
+                contactLastMsgRef = usersRef.child(contactUid)
+                        .child("chats").child(mAuth.getCurrentUser().getUid()).child("last_msg");
                 options = new FirebaseRecyclerOptions.Builder<Message>()
                                 .setQuery(userChatRef, snapshot -> new Message(snapshot.child("timestamp").getValue(String.class),
                                         snapshot.child("senderUid").getValue(String.class),
@@ -63,8 +67,17 @@ public class ChatActivity extends AppCompatActivity {
         toolbar.setTitle(contactName);
 
         RecyclerView msgList = findViewById(R.id.msg_list);
-        msgList.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        msgList.setLayoutManager(linearLayoutManager);
         adapter = new ChatAdapter(options);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                linearLayoutManager.smoothScrollToPosition(msgList ,
+                        null ,
+                        adapter.getItemCount());
+            }
+        });
         msgList.setAdapter(adapter);
 
         msgEt = findViewById(R.id.msg_et);
@@ -82,7 +95,9 @@ public class ChatActivity extends AppCompatActivity {
                 if (mAuth.getCurrentUser() != null) {
                     newMsg = new Message(msg, mAuth.getCurrentUser().getUid());
                     userChatRef.push().setValue(newMsg);
+                    userLastMsgRef.setValue(newMsg);
                     contactChatRef.push().setValue(newMsg);
+                    contactLastMsgRef.setValue(newMsg);
                     msgEt.getEditText().setText("");
                 }
             }

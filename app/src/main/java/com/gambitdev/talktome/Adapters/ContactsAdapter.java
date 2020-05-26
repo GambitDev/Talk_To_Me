@@ -13,17 +13,18 @@ import com.gambitdev.talktome.Pojo.Contact;
 import com.gambitdev.talktome.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
 
-    private ArrayList<Contact> contacts;
+    private List<Contact> contacts;
     private OnContactClick clickListener;
 
     public void setClickListener(OnContactClick clickListener) {
         this.clickListener = clickListener;
     }
 
-    public void setContacts(ArrayList<Contact> contacts) {
+    public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
         notifyDataSetChanged();
     }

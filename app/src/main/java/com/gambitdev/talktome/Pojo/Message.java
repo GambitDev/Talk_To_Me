@@ -2,6 +2,8 @@ package com.gambitdev.talktome.Pojo;
 
 import android.graphics.Bitmap;
 
+import androidx.room.Entity;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(goToRegister);
             finish();
         } else {
-            Intent goToHome = new Intent(SplashActivity.this , HomeActivity.class);
+            Intent goToHome = new Intent(SplashActivity.this , LoadContactsActivity.class);
             startActivity(goToHome);
             finish();
         }

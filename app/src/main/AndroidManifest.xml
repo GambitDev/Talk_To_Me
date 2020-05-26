@@ -11,8 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ChatActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.LoadContactsActivity"></activity>
+        <activity
+            android:name=".Activities.ChatActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.VerificationActivity"
             android:screenOrientation="portrait" />

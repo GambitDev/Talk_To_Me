@@ -2,16 +2,26 @@ package com.gambitdev.talktome.Pojo;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "contacts")
 public class Contact {
 
+    @NonNull
+    @PrimaryKey
     private String uid;
+
     private String name;
     private String phoneNumber;
     private Bitmap profilePic;
 
-    public Contact(String name, String phoneNumber) {
+    public Contact(@NonNull String uid , String name, String phoneNumber, Bitmap profilePic) {
+        this.uid = uid;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.profilePic = profilePic;
     }
 
     public String getName() {
