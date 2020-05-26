@@ -31,7 +31,7 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class LoadContactsActivity extends AppCompatActivity {
+public class LoadContactsActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference reference = db.getReference().child("users");
@@ -160,5 +160,15 @@ public class LoadContactsActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         reference.removeEventListener(eventListener);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
     }
 }

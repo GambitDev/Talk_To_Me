@@ -19,12 +19,25 @@
     <TextView
         android:id="@+id/contact_name"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:text="Dan Gavrielov"
         app:layout_constraintStart_toEndOf="@id/profile_pic"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center_vertical"
-        android:padding="20dp"
-        android:textSize="30sp"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="16dp"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/contact_last_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="I was thinking we should go to new york for the"
+        app:layout_constraintStart_toEndOf="@id/profile_pic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contact_name"
+        android:maxLines="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textSize="15sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

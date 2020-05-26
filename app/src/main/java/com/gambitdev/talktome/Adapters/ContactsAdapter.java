@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gambitdev.talktome.Interfaces.OnContactClick;
 import com.gambitdev.talktome.Pojo.Contact;
 import com.gambitdev.talktome.R;
 
@@ -70,10 +71,5 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             profilePic = itemView.findViewById(R.id.profile_pic);
             contactName = itemView.findViewById(R.id.contact_name);
         }
-    }
-
-    public interface OnContactClick {
-        void onDisplayNameClick(String contactUid , String contactName);
-        void onProfilePicClick();
     }
 }
