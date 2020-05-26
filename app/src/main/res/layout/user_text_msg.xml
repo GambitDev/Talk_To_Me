@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Example msg"
+            android:autoLink="all"
             style="@style/msg_text"/>
 
         <TextView
