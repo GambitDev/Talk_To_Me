@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Adapters.ChatAdapter;
+import com.gambitdev.talktome.Interfaces.OnMessageClick;
 import com.gambitdev.talktome.Pojo.Message;
 import com.gambitdev.talktome.R;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -32,7 +33,8 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ChatActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class ChatActivity extends AppCompatActivity
+        implements EasyPermissions.PermissionCallbacks, OnMessageClick {
 
     private FirebaseAuth mAuth;
     private DatabaseReference userChatRef;
@@ -90,6 +92,7 @@ public class ChatActivity extends AppCompatActivity implements EasyPermissions.P
         linearLayoutManager = new LinearLayoutManager(this);
         msgList.setLayoutManager(linearLayoutManager);
         adapter = new ChatAdapter(options);
+        adapter.setListener(this);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -176,6 +179,13 @@ public class ChatActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    @Override
+    public void onImageMessageClicked(String imgUrl) {
+        Intent goToViewImage = new Intent(ChatActivity.this , ViewImageActivity.class);
+        goToViewImage.putExtra("img_url" , imgUrl);
+        startActivity(goToViewImage);
     }
 
     @Override

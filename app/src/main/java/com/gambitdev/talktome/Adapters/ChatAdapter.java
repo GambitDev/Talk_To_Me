@@ -1,6 +1,5 @@
 package com.gambitdev.talktome.Adapters;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Activities.ChatActivity;
+import com.gambitdev.talktome.Interfaces.OnMessageClick;
 import com.gambitdev.talktome.Pojo.Message;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.MsgViewHolder> {
 
     private String userUid;
+    private OnMessageClick listener;
 
     private static final int USER_TEXT = 0;
     private static final int CONTACT_TEXT = 1;
@@ -34,6 +34,10 @@ public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null)
             userUid = mAuth.getCurrentUser().getUid();
+    }
+
+    public void setListener(OnMessageClick listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -96,6 +100,8 @@ public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.
 
                     }
                 });
+                imgViewHolder.img.setOnClickListener(v ->
+                        listener.onImageMessageClicked(msg.getImgUrl()));
                 if (msg.getTxtMsg().isEmpty()) {
                     imgViewHolder.caption.setVisibility(View.GONE);
                 } else {
