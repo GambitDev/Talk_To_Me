@@ -96,7 +96,7 @@ public class VerificationActivity extends AppCompatActivity {
                 .addOnCompleteListener(VerificationActivity.this, task -> {
                     if (task.isSuccessful()) {
                         addUserToDatabase();
-                        Intent intent = new Intent(VerificationActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(VerificationActivity.this, LoadContactsActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     } else {

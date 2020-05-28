@@ -30,4 +30,7 @@
     <string name="loading_chats">Loading Chats...</string>
     <string name="profile_pic">Profile Pic</string>
     <string name="img_msg_display">Image</string>
+    <string name="go_back">Go Back</string>
+    <string name="add_caption_to_picture">Add Caption To Picture</string>
+    <string name="pick_img">Pick Image</string>
 </resources>

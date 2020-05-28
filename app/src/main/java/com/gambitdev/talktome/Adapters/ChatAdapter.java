@@ -1,8 +1,10 @@
 package com.gambitdev.talktome.Adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,9 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.gambitdev.talktome.Activities.ChatActivity;
 import com.gambitdev.talktome.Pojo.Message;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.MsgViewHolder> {
 
@@ -32,7 +38,7 @@ public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.
 
     @Override
     public int getItemViewType(int position) {
-        if (getItem(position).getImgMsg() == null) {
+        if (getItem(position).getImgUrl() == null) {
             if (getItem(position).getSenderUid().equals(userUid))
                 return USER_TEXT;
             else
@@ -57,6 +63,12 @@ public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.
             case CONTACT_TEXT:
                 view = inflater.inflate(R.layout.contact_text_msg , parent , false);
                 return new TextMsgViewHolder(view);
+            case USER_IMG:
+                view = inflater.inflate(R.layout.user_img_msg , parent , false);
+                return new ImgMsgViewHolder(view);
+            case CONTACT_IMG:
+                view = inflater.inflate(R.layout.contact_img_msg , parent , false);
+                return new ImgMsgViewHolder(view);
             default:
                 return null;
         }
@@ -67,9 +79,30 @@ public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.
         switch (getItemViewType(position)) {
             case USER_TEXT:
             case CONTACT_TEXT:
-                TextMsgViewHolder viewHolder = (TextMsgViewHolder) holder;
-                viewHolder.msgTv.setText(msg.getTxtMsg());
-                viewHolder.msgTimestamp.setText(msg.getTimestamp());
+                TextMsgViewHolder textViewHolder = (TextMsgViewHolder) holder;
+                textViewHolder.msgTv.setText(msg.getTxtMsg());
+                break;
+            case USER_IMG:
+            case CONTACT_IMG:
+                ImgMsgViewHolder imgViewHolder = (ImgMsgViewHolder) holder;
+                Picasso.get().load(msg.getImgUrl()).into(imgViewHolder.img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        ((ChatActivity)holder.itemView.getContext()).scrollDown();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+                if (msg.getTxtMsg().isEmpty()) {
+                    imgViewHolder.caption.setVisibility(View.GONE);
+                } else {
+                    imgViewHolder.caption.setVisibility(View.VISIBLE);
+                    imgViewHolder.caption.setText(msg.getTxtMsg());
+                }
+                break;
         }
     }
 
@@ -83,19 +116,22 @@ public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.
     static class TextMsgViewHolder extends MsgViewHolder {
 
         TextView msgTv;
-        TextView msgTimestamp;
 
         TextMsgViewHolder(@NonNull View itemView) {
             super(itemView);
             msgTv = itemView.findViewById(R.id.msg_tv);
-            msgTimestamp = itemView.findViewById(R.id.msg_timestamp);
         }
     }
 
     static class ImgMsgViewHolder extends MsgViewHolder {
 
+        ImageView img;
+        TextView caption;
+
         ImgMsgViewHolder(@NonNull View itemView) {
             super(itemView);
+            img = itemView.findViewById(R.id.img);
+            caption = itemView.findViewById(R.id.img_caption);
         }
     }
 }

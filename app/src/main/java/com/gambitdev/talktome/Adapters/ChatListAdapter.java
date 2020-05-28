@@ -41,7 +41,7 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         holder.contactName.setText(model.getContactName());
         holder.contactName.setOnClickListener(v ->
                 listener.onDisplayNameClick(model.getUid() , model.getContactName()));
-        if (model.getLastMsg() != null) {
+        if (!model.getLastMsg().isEmpty()) {
             holder.lastMsg.setText(model.getLastMsg());
         } else {
             holder.lastMsg.setText(context.getResources().getString(R.string.img_msg_display));

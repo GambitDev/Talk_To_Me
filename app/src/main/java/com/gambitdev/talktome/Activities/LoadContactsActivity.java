@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
         setContentView(R.layout.activity_load_contacts);
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
+        requestPermissions();
 
         eventListener = new ValueEventListener() {
             @Override
@@ -57,7 +59,6 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
                     User user = child.getValue(User.class);
                     users.add(user);
                 }
-                requestPermissions();
                 if (phoneContacts != null) {
                     viewModel.insertContactList(getRegisteredContacts(phoneContacts, users));
                 }
@@ -80,8 +81,9 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
 
     @AfterPermissionGranted(REQUEST_CONTACTS_ACCESS)
     private void requestPermissions() {
-        if (EasyPermissions.hasPermissions(this , Manifest.permission.READ_CONTACTS)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_CONTACTS)) {
             phoneContacts = getContacts(this);
+
         } else {
             EasyPermissions.requestPermissions(this,
                     "Access to your contacts is necessary to use Talk To Me",
@@ -95,7 +97,7 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
         ContentResolver contentResolver = ctx.getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+" ASC");
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
@@ -137,7 +139,7 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
         return registeredContacts;
     }
 
-    private Contact createContact(PhoneContact phoneContact , List<User> registeredUsers) {
+    private Contact createContact(PhoneContact phoneContact, List<User> registeredUsers) {
         String currentContactPhoneNumber = cleanPhoneNumber(phoneContact.getPhoneNumber());
         for (int i = 0; i < registeredUsers.size(); i++) {
             String currentRegisteredUserPhoneNumber = cleanPhoneNumber(registeredUsers.get(i).getPhoneNumber());
@@ -146,7 +148,7 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
                 String contactPhone = phoneContact.getPhoneNumber();
                 String uid = registeredUsers.get(i).getUid();
                 Bitmap profilePic = registeredUsers.get(i).getProfilePic();
-                return new Contact(uid , contactName , contactPhone , profilePic);
+                return new Contact(uid, contactName, contactPhone, profilePic);
             }
         }
         return null;
