@@ -1,4 +1,4 @@
-package com.gambitdev.talktome.Pojo;
+package com.gambitdev.talktome.Models;
 
 public class PhoneContact {
 

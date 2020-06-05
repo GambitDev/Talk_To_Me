@@ -1,12 +1,10 @@
-package com.gambitdev.talktome.Pojo;
-
-import android.graphics.Bitmap;
+package com.gambitdev.talktome.Models;
 
 public class User {
 
     private String uid;
     private String phoneNumber;
-    private Bitmap profilePic;
+    private String profilePicUrl;
     private String status;
 
     public User() {
@@ -34,12 +32,12 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public Bitmap getProfilePic() {
-        return profilePic;
+    public String getProfilePic() {
+        return profilePicUrl;
     }
 
-    public void setProfilePic(Bitmap profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilePic(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
     }
 
     public String getStatus() {

@@ -3,10 +3,8 @@ package com.gambitdev.talktome.DataManager;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.room.RoomDatabase;
 
-import com.gambitdev.talktome.Pojo.Contact;
+import com.gambitdev.talktome.Models.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +24,7 @@ class ContactsRepository {
         return contacts;
     }
 
-    void insertContactList(ArrayList<Contact> contacts) {
+    void insertContactList(List<Contact> contacts) {
         ContactsDatabase.databaseWriteExecutor.execute(() ->
                 contactsDao.insertContactList(contacts));
     }

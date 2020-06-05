@@ -7,27 +7,25 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.gambitdev.talktome.Pojo.Contact;
+import com.gambitdev.talktome.Models.Contact;
+import com.gambitdev.talktome.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Dao
-abstract class ContactsDao {
+interface ContactsDao {
 
     @Query("SELECT * FROM contacts")
-    abstract LiveData<List<Contact>> getAllContacts();
+    LiveData<List<Contact>> getAllContacts();
 
     @Query("DELETE FROM contacts")
-    abstract void deleteAll();
+    void deleteAll();
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
-    abstract void insertContact(Contact contact);
+    void insertContact(Contact contact);
 
-    @Transaction
-    void insertContactList(ArrayList<Contact> contacts) {
-        for (Contact contact : contacts) {
-            insertContact(contact);
-        }
-    }
+    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    void insertContactList(List<Contact> contacts);
+
 }

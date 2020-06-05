@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.gambitdev.talktome.Pojo.Contact;
+import com.gambitdev.talktome.Models.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class ContactsViewModel extends AndroidViewModel {
         return repository.getAllContacts();
     }
 
-    public void insertContactList(ArrayList<Contact> contacts) {
+    public void insertContactList(List<Contact> contacts) {
         repository.insertContactList(contacts);
     }
 }

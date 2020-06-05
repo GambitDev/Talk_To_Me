@@ -1,13 +1,9 @@
 package com.gambitdev.talktome.Activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Adapters.ChatAdapter;
+import com.gambitdev.talktome.Dialogs.ImageMsgPickerBottomSheet;
+import com.gambitdev.talktome.Interfaces.OnChatDialogOptionClicked;
 import com.gambitdev.talktome.Interfaces.OnMessageClick;
-import com.gambitdev.talktome.Pojo.Message;
+import com.gambitdev.talktome.Models.Message;
 import com.gambitdev.talktome.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -27,14 +25,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class ChatActivity extends AppCompatActivity
-        implements EasyPermissions.PermissionCallbacks, OnMessageClick {
+        implements EasyPermissions.PermissionCallbacks, OnMessageClick, OnChatDialogOptionClicked {
 
     private FirebaseAuth mAuth;
     private DatabaseReference userChatRef;
@@ -122,8 +118,11 @@ public class ChatActivity extends AppCompatActivity
                 }
             }
         });
-        msgEt.setStartIconOnClickListener(v ->
-                requestImagePicker());
+        msgEt.setStartIconOnClickListener(v ->{
+            ImageMsgPickerBottomSheet bottomSheet = ImageMsgPickerBottomSheet.newInstance();
+            bottomSheet.setListener(this);
+            bottomSheet.show(getSupportFragmentManager() , "img_picker_dialog");
+        });
     }
 
     private void addMsgToDB(Message newMsg) {
@@ -134,7 +133,7 @@ public class ChatActivity extends AppCompatActivity
     }
 
     @AfterPermissionGranted(GET_IMAGE_PERMISSION)
-    private void requestImagePicker() {
+    private void requestGalleryImgPicker() {
         if (EasyPermissions.hasPermissions(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
@@ -146,6 +145,13 @@ public class ChatActivity extends AppCompatActivity
                     GET_IMAGE_PERMISSION,
                     Manifest.permission.READ_EXTERNAL_STORAGE);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode , permissions , grantResults , this);
     }
 
     @Override
@@ -196,5 +202,15 @@ public class ChatActivity extends AppCompatActivity
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
 
+    }
+
+    @Override
+    public void onImgFromCameraClicked() {
+
+    }
+
+    @Override
+    public void onImgFromGalleryClicked() {
+        requestGalleryImgPicker();
     }
 }

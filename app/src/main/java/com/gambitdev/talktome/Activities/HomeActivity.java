@@ -2,13 +2,19 @@ package com.gambitdev.talktome.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.gambitdev.talktome.Adapters.TabsPagerAdapter;
 import com.gambitdev.talktome.R;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -36,6 +42,23 @@ public class HomeActivity extends AppCompatActivity {
                 tab.setIcon(R.drawable.ic_contacts);
             }
         }).attach();
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.user_profile) {
+                Intent goToUserProfile = new Intent(HomeActivity.this , UserProfileActivity.class);
+                startActivity(goToUserProfile);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu , menu);
+        return true;
     }
 
     public void startChat(String contactUid , String contactName) {

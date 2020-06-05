@@ -6,18 +6,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
-import com.gambitdev.talktome.Pojo.Contact;
-import com.gambitdev.talktome.Pojo.PhoneContact;
-import com.gambitdev.talktome.Pojo.User;
+import com.gambitdev.talktome.Models.Contact;
+import com.gambitdev.talktome.Models.PhoneContact;
+import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
 import com.google.firebase.database.DataSnapshot;
@@ -32,16 +30,16 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class LoadContactsActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class LoadContactsActivity extends AppCompatActivity
+        implements EasyPermissions.PermissionCallbacks {
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference reference = db.getReference().child("users");
-    private ValueEventListener eventListener;
-    private ContactsViewModel viewModel;
-    private ArrayList<PhoneContact> phoneContacts;
-    private ArrayList<User> users;
-
+    private ValueEventListener listener;
     private final static int REQUEST_CONTACTS_ACCESS = 0;
+    private List<PhoneContact> phoneContacts;
+    private List<User> users = new ArrayList<>();
+    private ContactsViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +47,17 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
         setContentView(R.layout.activity_load_contacts);
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
-        requestPermissions();
 
-        eventListener = new ValueEventListener() {
+        listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                users = new ArrayList<>();
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     User user = child.getValue(User.class);
                     users.add(user);
                 }
                 if (phoneContacts != null) {
-                    viewModel.insertContactList(getRegisteredContacts(phoneContacts, users));
+                    List<Contact> registeredContacts = getRegisteredContacts();
+                    viewModel.insertContactList(registeredContacts);
                 }
                 Intent goToHomeActivity = new Intent(
                         LoadContactsActivity.this,
@@ -72,18 +69,20 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(LoadContactsActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoadContactsActivity.this,
+                        databaseError.getMessage(),
+                        Toast.LENGTH_SHORT)
+                        .show();
             }
         };
-
-        reference.addValueEventListener(eventListener);
+        initContactList();
     }
 
     @AfterPermissionGranted(REQUEST_CONTACTS_ACCESS)
-    private void requestPermissions() {
+    private void initContactList() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_CONTACTS)) {
-            phoneContacts = getContacts(this);
-
+            phoneContacts = getPhoneContacts();
+            getUsers();
         } else {
             EasyPermissions.requestPermissions(this,
                     "Access to your contacts is necessary to use Talk To Me",
@@ -92,29 +91,35 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
         }
     }
 
-    private ArrayList<PhoneContact> getContacts(Context ctx) {
-        ArrayList<PhoneContact> list = new ArrayList<>();
-        ContentResolver contentResolver = ctx.getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode , permissions , grantResults , this);
+    }
+
+    private List<PhoneContact> getPhoneContacts() {
+        ArrayList<PhoneContact> contacts = new ArrayList<>();
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 if (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    Cursor cursorInfo = contentResolver
+                    Cursor cursorInfo = resolver
                             .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                                     new String[]{id}, null);
-
                     if (cursorInfo != null) {
                         while (cursorInfo.moveToNext()) {
-                            String name = cursor.getString(cursor.getColumnIndex(
-                                    ContactsContract.Contacts.DISPLAY_NAME));
+                            String contactName = cursorInfo.getString(
+                                    cursorInfo.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                             String phoneNumber = cursorInfo.getString(
                                     cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            PhoneContact current = new PhoneContact(name, phoneNumber);
-                            list.add(current);
+                            PhoneContact contact = new PhoneContact(contactName , phoneNumber);
+                            contacts.add(contact);
                         }
                         cursorInfo.close();
                     }
@@ -122,15 +127,18 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
             }
             cursor.close();
         }
-        return list;
+        return contacts;
     }
 
-    private ArrayList<Contact> getRegisteredContacts(ArrayList<PhoneContact> phoneContacts,
-                                                     ArrayList<User> registeredUsers) {
+    private void getUsers() {
+        reference.addValueEventListener(listener);
+    }
+
+    private ArrayList<Contact> getRegisteredContacts() {
         ArrayList<Contact> registeredContacts = new ArrayList<>();
         if (phoneContacts != null) {
             for (int i = 0; i < phoneContacts.size(); i++) {
-                Contact contact = createContact(phoneContacts.get(i), registeredUsers);
+                Contact contact = createContact(phoneContacts.get(i));
                 if (contact != null) {
                     registeredContacts.add(contact);
                 }
@@ -139,15 +147,15 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
         return registeredContacts;
     }
 
-    private Contact createContact(PhoneContact phoneContact, List<User> registeredUsers) {
+    private Contact createContact(PhoneContact phoneContact) {
         String currentContactPhoneNumber = cleanPhoneNumber(phoneContact.getPhoneNumber());
-        for (int i = 0; i < registeredUsers.size(); i++) {
-            String currentRegisteredUserPhoneNumber = cleanPhoneNumber(registeredUsers.get(i).getPhoneNumber());
+        for (int i = 0; i < users.size(); i++) {
+            String currentRegisteredUserPhoneNumber = cleanPhoneNumber(users.get(i).getPhoneNumber());
             if (currentContactPhoneNumber.equals(currentRegisteredUserPhoneNumber)) {
                 String contactName = phoneContact.getName();
                 String contactPhone = phoneContact.getPhoneNumber();
-                String uid = registeredUsers.get(i).getUid();
-                Bitmap profilePic = registeredUsers.get(i).getProfilePic();
+                String uid = users.get(i).getUid();
+                String profilePic = users.get(i).getProfilePic();
                 return new Contact(uid, contactName, contactPhone, profilePic);
             }
         }
@@ -161,7 +169,7 @@ public class LoadContactsActivity extends AppCompatActivity implements EasyPermi
     @Override
     protected void onStop() {
         super.onStop();
-        reference.removeEventListener(eventListener);
+        reference.removeEventListener(listener);
     }
 
     @Override

@@ -33,4 +33,16 @@
     <string name="go_back">Go Back</string>
     <string name="add_caption_to_picture">Add Caption To Picture</string>
     <string name="pick_img">Pick Image</string>
+    <string name="my_profile">My Profile</string>
+    <string name="change_image">Change Image</string>
+    <string name="status">Status</string>
+    <string name="edit">Edit</string>
+    <string name="hi_there_talk_to_me">Hi there! Talk To Me!</string>
+    <string name="bottom_sheet_option_camera">Use Camera</string>
+    <string name="bottom_sheet_option_gallery">Upload from Gallery</string>
+    <string name="bottom_sheet_option_heading">Add Photo</string>
+    <string name="bottom_sheet_option_remove_photo">Remove Photo</string>
+    <string name="share_your_thoughts">Share your thoughts</string>
+    <string name="empty_status_error">Status can\'t be empty</string>
+    <string name="long_status_error">Status is too long</string>
 </resources>

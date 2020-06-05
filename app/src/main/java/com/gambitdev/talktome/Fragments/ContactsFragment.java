@@ -18,13 +18,11 @@ import android.view.ViewGroup;
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ContactsAdapter;
 import com.gambitdev.talktome.Interfaces.OnContactClick;
-import com.gambitdev.talktome.Pojo.Contact;
+import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.R;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
 
 import java.util.List;
-
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class ContactsFragment extends Fragment
         implements OnContactClick {

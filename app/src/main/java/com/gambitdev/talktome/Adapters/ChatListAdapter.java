@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Interfaces.OnContactClick;
-import com.gambitdev.talktome.Pojo.ChatListItem;
+import com.gambitdev.talktome.Models.ChatListItem;
 import com.gambitdev.talktome.R;
+import com.squareup.picasso.Picasso;
 
 public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , ChatListAdapter.ChatListItemViewHolder> {
 
@@ -48,8 +49,8 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         }
         holder.lastMsg.setOnClickListener(v ->
                 listener.onDisplayNameClick(model.getUid() , model.getContactName()));
-        if (model.getProfilePic() != null)
-            holder.profilePic.setImageBitmap(model.getProfilePic());
+        if (model.getProfilePicUrl() != null)
+            Picasso.get().load(model.getProfilePicUrl()).into(holder.profilePic);
         holder.profilePic.setOnClickListener(v ->
                 listener.onProfilePicClick());
     }

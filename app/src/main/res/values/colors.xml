@@ -7,4 +7,5 @@
     <color name="selected_tab_color">#4D4D4D</color>
     <color name="tab_color">#B94D4D4D</color>
     <color name="light_grey">#CACACA</color>
+    <color name="grey">#909090</color>
 </resources>

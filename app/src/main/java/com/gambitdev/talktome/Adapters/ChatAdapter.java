@@ -13,7 +13,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Activities.ChatActivity;
 import com.gambitdev.talktome.Interfaces.OnMessageClick;
-import com.gambitdev.talktome.Pojo.Message;
+import com.gambitdev.talktome.Models.Message;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Callback;

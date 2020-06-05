@@ -1,4 +1,4 @@
-package com.gambitdev.talktome.Pojo;
+package com.gambitdev.talktome.Models;
 
 import android.graphics.Bitmap;
 
@@ -7,13 +7,13 @@ public class ChatListItem {
     private String uid;
     private String contactName;
     private String lastMsg;
-    private Bitmap profilePic;
+    private String profilePicUrl;
 
-    public ChatListItem(String uid, String contactName, String lastMsg, Bitmap profilePic) {
+    public ChatListItem(String uid, String contactName, String lastMsg, String profilePicUrl) {
         this.uid = uid;
         this.contactName = contactName;
         this.lastMsg = lastMsg;
-        this.profilePic = profilePic;
+        this.profilePicUrl = profilePicUrl;
     }
 
     public String getUid() {
@@ -40,11 +40,11 @@ public class ChatListItem {
         this.lastMsg = lastMsg;
     }
 
-    public Bitmap getProfilePic() {
-        return profilePic;
+    public String getProfilePicUrl() {
+        return profilePicUrl;
     }
 
-    public void setProfilePic(Bitmap profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
     }
 }

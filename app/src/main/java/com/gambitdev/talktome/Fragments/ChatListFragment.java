@@ -1,7 +1,6 @@
 package com.gambitdev.talktome.Fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,21 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ChatListAdapter;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
 import com.gambitdev.talktome.Interfaces.OnContactClick;
-import com.gambitdev.talktome.Pojo.ChatListItem;
-import com.gambitdev.talktome.Pojo.Contact;
-import com.gambitdev.talktome.Pojo.Message;
+import com.gambitdev.talktome.Models.ChatListItem;
+import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChatListFragment extends Fragment
@@ -74,7 +69,7 @@ public class ChatListFragment extends Fragment
                                 currentContact != null ? currentContact.getUid() : null,
                                 currentContact != null ? currentContact.getName() : null,
                                 snapshot.child("last_msg").child("txtMsg").getValue(String.class),
-                                currentContact != null ? currentContact.getProfilePic() : null
+                                currentContact != null ? currentContact.getProfilePicUrl() : null
                         );
                     })
                     .build();

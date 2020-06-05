@@ -1,4 +1,4 @@
-package com.gambitdev.talktome.Pojo;
+package com.gambitdev.talktome.Models;
 
 import android.graphics.Bitmap;
 
@@ -15,13 +15,13 @@ public class Contact {
 
     private String name;
     private String phoneNumber;
-    private Bitmap profilePic;
+    private String profilePicUrl;
 
-    public Contact(@NonNull String uid , String name, String phoneNumber, Bitmap profilePic) {
+    public Contact(@NonNull String uid , String name, String phoneNumber, String profilePicUrl) {
         this.uid = uid;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.profilePic = profilePic;
+        this.profilePicUrl = profilePicUrl;
     }
 
     public String getName() {
@@ -40,12 +40,12 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public Bitmap getProfilePic() {
-        return profilePic;
+    public String getProfilePicUrl() {
+        return profilePicUrl;
     }
 
-    public void setProfilePic(Bitmap profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilePic(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
     }
 
     public String getUid() {

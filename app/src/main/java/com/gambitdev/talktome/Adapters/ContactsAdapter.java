@@ -10,10 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gambitdev.talktome.Interfaces.OnContactClick;
-import com.gambitdev.talktome.Pojo.Contact;
+import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.R;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
@@ -46,8 +46,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                 clickListener.onDisplayNameClick(currentContact.getUid(),
                         currentContact.getName())
         );
-        if (currentContact.getProfilePic() != null)
-            holder.profilePic.setImageBitmap(currentContact.getProfilePic());
+        if (currentContact.getProfilePicUrl() != null)
+            Picasso.get().load(currentContact.getProfilePicUrl()).into(holder.profilePic);
         holder.profilePic.setOnClickListener(v ->
                 clickListener.onProfilePicClick());
     }
