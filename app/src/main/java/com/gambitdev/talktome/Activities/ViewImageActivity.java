@@ -23,5 +23,7 @@ public class ViewImageActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.img);
         if (imgUrl != null)
             Picasso.get().load(imgUrl).into(imageView);
+        else
+            imageView.setImageDrawable(getDrawable(R.drawable.profile_pic_default));
     }
 }

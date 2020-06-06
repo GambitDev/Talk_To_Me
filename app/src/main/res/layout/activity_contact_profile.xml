@@ -7,15 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Activities.UserProfileActivity">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp"
-        android:visibility="gone"/>
-
     <ImageButton
         android:id="@+id/back_btn"
         android:layout_width="wrap_content"
@@ -37,19 +28,6 @@
         app:layout_constraintTop_toBottomOf="@id/back_btn"
         android:contentDescription="@string/profile_picture"/>
 
-    <ImageButton
-        android:id="@+id/change_img_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="@id/user_img"
-        app:layout_constraintStart_toStartOf="@id/user_img"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_image"
-        android:tint="#fff"
-        android:contentDescription="@string/change_image"
-        android:background="@drawable/change_img_btn_bg"
-        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -65,36 +43,17 @@
         android:text="@string/status"
         app:layout_constraintTop_toBottomOf="@id/divider"
         android:padding="16dp"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/status_head">
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="0dp"
-            android:layout_weight="9"
-            android:layout_height="wrap_content"
-            android:text="@string/hi_there_talk_to_me"
-            android:padding="16dp"
-            android:layout_gravity="center_vertical"
-            android:textSize="17sp"/>
-
-        <ImageButton
-            android:id="@+id/edit_btn"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/user_img"
-            app:layout_constraintStart_toStartOf="@id/user_img"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_edit"
-            android:contentDescription="@string/change_image"
-            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
-
-    </LinearLayout>
+        android:layout_gravity="center_vertical"
+        android:padding="16dp"
+        android:text="@string/hi_there_talk_to_me"
+        app:layout_constraintTop_toBottomOf="@id/status_head"
+        android:textSize="17sp" />
 
 
 

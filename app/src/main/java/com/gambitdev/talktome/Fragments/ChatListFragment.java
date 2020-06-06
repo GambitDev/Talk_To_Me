@@ -1,6 +1,7 @@
 package com.gambitdev.talktome.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.gambitdev.talktome.Activities.ContactProfileActivity;
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ChatListAdapter;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
+import com.gambitdev.talktome.Interfaces.OnChatClicked;
 import com.gambitdev.talktome.Interfaces.OnContactClick;
 import com.gambitdev.talktome.Models.ChatListItem;
 import com.gambitdev.talktome.Models.Contact;
@@ -28,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 public class ChatListFragment extends Fragment
-        implements OnContactClick {
+        implements OnChatClicked {
 
     private Context mContext;
     private ChatListAdapter adapter;
@@ -106,7 +109,12 @@ public class ChatListFragment extends Fragment
     }
 
     @Override
-    public void onProfilePicClick() {
+    public void onProfilePicClick(String uid) {
+        ((HomeActivity) mContext).goToContactProfile(uid);
+    }
+
+    @Override
+    public void onLongClicked() {
 
     }
 }

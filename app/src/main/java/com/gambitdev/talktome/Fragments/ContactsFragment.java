@@ -62,7 +62,7 @@ public class ContactsFragment extends Fragment
     }
 
     @Override
-    public void onProfilePicClick() {
-
+    public void onProfilePicClick(String uid) {
+        ((HomeActivity) mContext).goToContactProfile(uid);
     }
 }

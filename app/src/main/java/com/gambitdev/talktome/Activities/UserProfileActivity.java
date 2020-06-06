@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -55,7 +57,15 @@ public class UserProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        findViewById(R.id.back_btn).setOnClickListener(v -> finish());
+
         userImg = findViewById(R.id.user_img);
+        userImg.setOnClickListener(v -> {
+            Intent goToViewImg = new Intent(UserProfileActivity.this,
+                    ViewImageActivity.class);
+            goToViewImg.putExtra("img_url" , user.getProfilePic());
+            startActivity(goToViewImg);
+        });
         TextView status = findViewById(R.id.status);
 
         listener = new ValueEventListener() {
@@ -125,6 +135,7 @@ public class UserProfileActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == REQUEST_LOAD_IMG) {
                 Uri selectedImg = data.getData();
+                findViewById(R.id.progress).setVisibility(View.VISIBLE);
                 uploadImg(selectedImg);
             }
         }
@@ -147,7 +158,17 @@ public class UserProfileActivity extends AppCompatActivity
                         String downloadUrl;
                         if (task.getResult() != null) {
                             downloadUrl = task.getResult().toString();
-                            Picasso.get().load(downloadUrl).into(userImg);
+                            Picasso.get().load(downloadUrl).into(userImg, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    findViewById(R.id.progress).setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+
+                                }
+                            });
                             user.setProfilePic(downloadUrl);
                             reference.setValue(user);
                         }

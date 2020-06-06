@@ -14,7 +14,7 @@ import com.gambitdev.talktome.Models.Contact;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Contact.class} , version = 2 , exportSchema = false)
+@Database(entities = {Contact.class} , version = 3 , exportSchema = false)
 @TypeConverters({Converters.class})
 abstract class ContactsDatabase extends RoomDatabase {
 
@@ -32,6 +32,7 @@ abstract class ContactsDatabase extends RoomDatabase {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             ContactsDatabase.class,
                             "contacts_db")
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

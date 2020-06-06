@@ -67,4 +67,11 @@ public class HomeActivity extends AppCompatActivity {
         goToChat.putExtra("contact_name" , contactName);
         startActivity(goToChat);
     }
+
+    public void goToContactProfile(String uid) {
+        Intent goToContactProfile = new Intent(HomeActivity.this,
+                ContactProfileActivity.class);
+        goToContactProfile.putExtra("contact_uid" , uid);
+        startActivity(goToContactProfile);
+    }
 }

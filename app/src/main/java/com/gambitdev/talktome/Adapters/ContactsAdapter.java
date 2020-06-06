@@ -49,7 +49,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         if (currentContact.getProfilePicUrl() != null)
             Picasso.get().load(currentContact.getProfilePicUrl()).into(holder.profilePic);
         holder.profilePic.setOnClickListener(v ->
-                clickListener.onProfilePicClick());
+                clickListener.onProfilePicClick(currentContact.getUid()));
     }
 
     @Override

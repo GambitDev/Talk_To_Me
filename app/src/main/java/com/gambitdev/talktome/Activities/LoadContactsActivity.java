@@ -156,7 +156,8 @@ public class LoadContactsActivity extends AppCompatActivity
                 String contactPhone = phoneContact.getPhoneNumber();
                 String uid = users.get(i).getUid();
                 String profilePic = users.get(i).getProfilePic();
-                return new Contact(uid, contactName, contactPhone, profilePic);
+                String status = users.get(i).getStatus();
+                return new Contact(uid, contactName, contactPhone, profilePic, status);
             }
         }
         return null;

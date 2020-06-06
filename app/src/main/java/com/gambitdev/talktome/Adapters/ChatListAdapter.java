@@ -52,7 +52,7 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         if (model.getProfilePicUrl() != null)
             Picasso.get().load(model.getProfilePicUrl()).into(holder.profilePic);
         holder.profilePic.setOnClickListener(v ->
-                listener.onProfilePicClick());
+                listener.onProfilePicClick(model.getUid()));
     }
 
     @NonNull
