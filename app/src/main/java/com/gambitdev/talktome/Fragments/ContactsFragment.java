@@ -52,12 +52,8 @@ public class ContactsFragment extends Fragment
         adapter.setClickListener(this);
         contactList.setAdapter(adapter);
         ContactsViewModel viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
-        viewModel.getAllContacts().observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
-            @Override
-            public void onChanged(List<Contact> contacts) {
-                adapter.setContacts(contacts);
-            }
-        });
+        viewModel.getAllContacts().observe(getViewLifecycleOwner(),
+                adapter::setContacts);
     }
 
     @Override

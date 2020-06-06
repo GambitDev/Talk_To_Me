@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
+import androidx.room.Update;
 
 import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.Models.User;
@@ -25,7 +26,6 @@ interface ContactsDao {
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     void insertContact(Contact contact);
 
-    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insertContactList(List<Contact> contacts);
-
 }

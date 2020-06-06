@@ -44,13 +44,16 @@ public class UserImagePickerBottomSheet extends BottomSheetDialogFragment {
 
     private void selectImgFromCamera() {
         listener.onImgFromCameraClicked();
+        dismiss();
     }
 
     private void selectImgFromGallery() {
         listener.onImgFromGalleryClicked();
+        dismiss();
     }
 
     private void removeUserImg() {
         listener.onRemoveImgClicked();
+        dismiss();
     }
 }
