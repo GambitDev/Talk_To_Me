@@ -19,7 +19,6 @@ import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ChatListAdapter;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
 import com.gambitdev.talktome.Dialogs.ChatListOptionsBottomSheet;
-import com.gambitdev.talktome.HelperObj.ContactRefresher;
 import com.gambitdev.talktome.Interfaces.OnChatClicked;
 import com.gambitdev.talktome.Interfaces.OnChatListOptions;
 import com.gambitdev.talktome.Models.ChatListItem;
