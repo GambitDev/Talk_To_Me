@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.gambitdev.talktome.Interfaces.OnChatDialogOptionClicked;
+import com.gambitdev.talktome.Interfaces.OnImgOptions;
 import com.gambitdev.talktome.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class ImageMsgPickerBottomSheet extends BottomSheetDialogFragment {
 
-    private OnChatDialogOptionClicked listener;
+    private OnImgOptions listener;
 
-    public void setListener(OnChatDialogOptionClicked listener) {
+    public void setListener(OnImgOptions listener) {
         this.listener = listener;
     }
 
@@ -42,6 +42,7 @@ public class ImageMsgPickerBottomSheet extends BottomSheetDialogFragment {
 
     private void selectImgFromCamera() {
         listener.onImgFromCameraClicked();
+        dismiss();
     }
 
     private void selectImgFromGallery() {

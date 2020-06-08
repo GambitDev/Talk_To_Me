@@ -1,6 +1,7 @@
 package com.gambitdev.talktome.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,13 +11,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gambitdev.talktome.Activities.HomeActivity;
+import com.gambitdev.talktome.Activities.LoadContactsActivity;
 import com.gambitdev.talktome.Adapters.ContactsAdapter;
+import com.gambitdev.talktome.HelperObj.ContactRefresher;
 import com.gambitdev.talktome.Interfaces.OnContactClick;
 import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.R;

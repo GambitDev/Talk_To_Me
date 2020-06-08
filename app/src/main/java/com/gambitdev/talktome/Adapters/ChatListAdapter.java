@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.gambitdev.talktome.Interfaces.OnContactClick;
+import com.gambitdev.talktome.Interfaces.OnChatClicked;
 import com.gambitdev.talktome.Models.ChatListItem;
 import com.gambitdev.talktome.R;
 import com.squareup.picasso.Picasso;
@@ -20,9 +20,9 @@ import com.squareup.picasso.Picasso;
 public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , ChatListAdapter.ChatListItemViewHolder> {
 
     private Context context;
-    private OnContactClick listener;
+    private OnChatClicked listener;
 
-    public void setListener(OnContactClick listener) {
+    public void setListener(OnChatClicked listener) {
         this.listener = listener;
     }
 
@@ -42,6 +42,10 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         holder.contactName.setText(model.getContactName());
         holder.contactName.setOnClickListener(v ->
                 listener.onDisplayNameClick(model.getUid() , model.getContactName()));
+        holder.contactName.setOnLongClickListener(v -> {
+            listener.onLongClicked(model.getUid());
+            return true;
+        });
         if (!model.getLastMsg().isEmpty()) {
             holder.lastMsg.setText(model.getLastMsg());
         } else {
@@ -49,10 +53,18 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         }
         holder.lastMsg.setOnClickListener(v ->
                 listener.onDisplayNameClick(model.getUid() , model.getContactName()));
+        holder.lastMsg.setOnLongClickListener(v -> {
+            listener.onLongClicked(model.getUid());
+            return true;
+        });
         if (model.getProfilePicUrl() != null)
             Picasso.get().load(model.getProfilePicUrl()).into(holder.profilePic);
         holder.profilePic.setOnClickListener(v ->
                 listener.onProfilePicClick(model.getUid()));
+        holder.profilePic.setOnLongClickListener(v -> {
+            listener.onLongClicked(model.getUid());
+            return true;
+        });
     }
 
     @NonNull
@@ -72,7 +84,6 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
 
         ChatListItemViewHolder(@NonNull View itemView) {
             super(itemView);
-
             profilePic = itemView.findViewById(R.id.profile_pic);
             contactName = itemView.findViewById(R.id.contact_name);
             lastMsg = itemView.findViewById(R.id.contact_last_msg);

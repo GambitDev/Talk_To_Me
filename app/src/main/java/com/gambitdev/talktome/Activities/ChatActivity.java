@@ -2,19 +2,26 @@ package com.gambitdev.talktome.Activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gambitdev.talktome.Adapters.ChatAdapter;
+import com.gambitdev.talktome.Dialogs.ChatOptionsBottomSheet;
 import com.gambitdev.talktome.Dialogs.ImageMsgPickerBottomSheet;
-import com.gambitdev.talktome.Interfaces.OnChatDialogOptionClicked;
+import com.gambitdev.talktome.Interfaces.OnChatOptions;
+import com.gambitdev.talktome.Interfaces.OnImgOptions;
 import com.gambitdev.talktome.Interfaces.OnMessageClick;
 import com.gambitdev.talktome.Models.Message;
 import com.gambitdev.talktome.R;
@@ -25,12 +32,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class ChatActivity extends AppCompatActivity
-        implements EasyPermissions.PermissionCallbacks, OnMessageClick, OnChatDialogOptionClicked {
+        implements EasyPermissions.PermissionCallbacks,
+        OnMessageClick,
+        OnImgOptions,
+        OnChatOptions {
 
     private FirebaseAuth mAuth;
     private DatabaseReference userChatRef;
@@ -42,10 +57,13 @@ public class ChatActivity extends AppCompatActivity
     private FirebaseRecyclerOptions<Message> options;
     private RecyclerView msgList;
     private LinearLayoutManager linearLayoutManager;
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
 
     private static final int GET_IMAGE_PERMISSION = 1;
     private static final int REQUEST_LOAD_IMG = 2;
     private static final int REQUEST_SEND_IMG = 3;
+    private static final int GET_CAMERA_PERMISSION = 4;
+    private static final int REQUEST_IMAGE_CAPTURE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +75,6 @@ public class ChatActivity extends AppCompatActivity
 
     private void initializeActivity() {
         mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = db.getReference().child("users");
 
         String contactUid = getIntent().getStringExtra("contact_uid");
@@ -83,6 +100,17 @@ public class ChatActivity extends AppCompatActivity
         String contactName = getIntent().getStringExtra("contact_name");
         MaterialToolbar toolbar = findViewById(R.id.top_app_bar);
         toolbar.setTitle(contactName);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.more) {
+                ChatOptionsBottomSheet bottomSheet = ChatOptionsBottomSheet
+                        .newInstance(contactUid);
+                bottomSheet.setListener(this);
+                bottomSheet.show(getSupportFragmentManager() , "chat_options_dialog");
+                return true;
+            }
+            return false;
+        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         msgList = findViewById(R.id.msg_list);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -141,9 +169,25 @@ public class ChatActivity extends AppCompatActivity
             startActivityForResult(photoPickerIntent, REQUEST_LOAD_IMG);
         } else {
             EasyPermissions.requestPermissions(this,
-                    "Access to external storage is necessary to access gallery.",
+                    getResources().getString(R.string.storage_permission_rational),
                     GET_IMAGE_PERMISSION,
                     Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    @AfterPermissionGranted(GET_CAMERA_PERMISSION)
+    private void requestCamera() {
+        if (EasyPermissions.hasPermissions(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        } else {
+            EasyPermissions.requestPermissions(this,
+                    getResources().getString(R.string.storage_permission_rational),
+                    GET_CAMERA_PERMISSION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
 
@@ -206,11 +250,38 @@ public class ChatActivity extends AppCompatActivity
 
     @Override
     public void onImgFromCameraClicked() {
-
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            Toast.makeText(this,
+                    getResources().getString(R.string.no_camera_on_device),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        requestCamera();
     }
 
     @Override
     public void onImgFromGalleryClicked() {
         requestGalleryImgPicker();
+    }
+
+    @Override
+    public void showContact(String uid) {
+        Intent goToContactProfile = new Intent(ChatActivity.this,
+                ContactProfileActivity.class);
+        goToContactProfile.putExtra("contact_uid" , uid);
+        startActivity(goToContactProfile);
+    }
+
+    @Override
+    public void deleteChat(String uid) {
+        if (mAuth.getCurrentUser() != null) {
+            DatabaseReference userChatRef = db.getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("chats")
+                    .child(uid);
+            userChatRef.removeValue();
+            finish();
+        }
     }
 }

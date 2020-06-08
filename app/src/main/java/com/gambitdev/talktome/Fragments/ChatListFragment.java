@@ -1,7 +1,6 @@
 package com.gambitdev.talktome.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,18 +8,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.gambitdev.talktome.Activities.ContactProfileActivity;
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ChatListAdapter;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
+import com.gambitdev.talktome.Dialogs.ChatListOptionsBottomSheet;
+import com.gambitdev.talktome.HelperObj.ContactRefresher;
 import com.gambitdev.talktome.Interfaces.OnChatClicked;
-import com.gambitdev.talktome.Interfaces.OnContactClick;
+import com.gambitdev.talktome.Interfaces.OnChatListOptions;
 import com.gambitdev.talktome.Models.ChatListItem;
 import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.R;
@@ -31,12 +32,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 public class ChatListFragment extends Fragment
-        implements OnChatClicked {
+        implements OnChatClicked , OnChatListOptions {
 
     private Context mContext;
     private ChatListAdapter adapter;
     private List<Contact> contactList;
     private FirebaseRecyclerOptions<ChatListItem> options;
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -55,12 +58,10 @@ public class ChatListFragment extends Fragment
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         ContactsViewModel viewModel = new ViewModelProvider(this)
                 .get(ContactsViewModel.class);
         viewModel.getAllContacts().observe(getViewLifecycleOwner() , contacts ->
                 contactList = contacts);
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
         if (mAuth.getCurrentUser() != null) {
             String userUid = mAuth.getCurrentUser().getUid();
             DatabaseReference userChatRef = db.getReference()
@@ -114,7 +115,21 @@ public class ChatListFragment extends Fragment
     }
 
     @Override
-    public void onLongClicked() {
+    public void onLongClicked(String uid) {
+        ChatListOptionsBottomSheet bottomSheet = ChatListOptionsBottomSheet.newInstance(uid);
+        bottomSheet.setListener(this);
+        bottomSheet.show(getParentFragmentManager() , "chat_options_dialog");
+    }
 
+    @Override
+    public void deleteChat(String uid) {
+        if (mAuth.getCurrentUser() != null) {
+            DatabaseReference userChatRef = db.getReference()
+                    .child("users")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("chats")
+                    .child(uid);
+            userChatRef.removeValue();
+        }
     }
 }

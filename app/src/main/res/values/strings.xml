@@ -45,4 +45,11 @@
     <string name="share_your_thoughts">Share your thoughts</string>
     <string name="empty_status_error">Status can\'t be empty</string>
     <string name="long_status_error">Status is too long</string>
+    <string name="chat_options">Chat Options</string>
+    <string name="refresh_data">Refresh Data</string>
+    <string name="options">Options</string>
+    <string name="delete_chat_this_cannot_be_undone">Delete chat? This cannot be undone!</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_camera_on_device">This feature requires a camera</string>
+    <string name="storage_permission_rational">Access to external storage is necessary to access gallery.</string>
 </resources>

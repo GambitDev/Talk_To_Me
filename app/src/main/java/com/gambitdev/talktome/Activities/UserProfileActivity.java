@@ -15,8 +15,7 @@ import android.widget.Toast;
 
 import com.gambitdev.talktome.Dialogs.EditStatusBottomSheet;
 import com.gambitdev.talktome.Dialogs.UserImagePickerBottomSheet;
-import com.gambitdev.talktome.Interfaces.OnProfileDialogOptionClicked;
-import com.gambitdev.talktome.Models.Message;
+import com.gambitdev.talktome.Interfaces.OnProfileImgOptions;
 import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +36,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class UserProfileActivity extends AppCompatActivity
-        implements OnProfileDialogOptionClicked, EasyPermissions.PermissionCallbacks {
+        implements OnProfileImgOptions, EasyPermissions.PermissionCallbacks {
 
     private static final int GET_IMAGE_PERMISSION = 1;
     private static final int REQUEST_LOAD_IMG = 2;

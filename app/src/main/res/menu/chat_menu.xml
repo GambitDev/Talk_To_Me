@@ -3,17 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/show_contact"
-        android:icon="@drawable/ic_person"
-        android:title="@string/show_contact"
-        android:contentDescription="@string/show_contact"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/delete_chat"
-        android:icon="@drawable/ic_delete"
-        android:title="@string/delete_chat"
-        android:contentDescription="@string/delete_chat"
-        app:showAsAction="never" />
+        android:id="@+id/more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/chat_options"
+        android:contentDescription="@string/chat_options"
+        app:showAsAction="always" />
 
 </menu>

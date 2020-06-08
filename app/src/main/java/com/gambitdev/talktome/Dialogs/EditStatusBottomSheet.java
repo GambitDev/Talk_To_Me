@@ -9,16 +9,16 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.gambitdev.talktome.Interfaces.OnProfileDialogOptionClicked;
+import com.gambitdev.talktome.Interfaces.OnProfileImgOptions;
 import com.gambitdev.talktome.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class EditStatusBottomSheet extends BottomSheetDialogFragment {
 
-    private OnProfileDialogOptionClicked listener;
+    private OnProfileImgOptions listener;
 
-    public void setListener(OnProfileDialogOptionClicked listener) {
+    public void setListener(OnProfileImgOptions listener) {
         this.listener = listener;
     }
 

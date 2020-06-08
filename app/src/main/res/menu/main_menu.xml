@@ -8,4 +8,10 @@
         app:showAsAction="ifRoom"
         android:contentDescription="@string/my_profile"/>
 
+    <item android:id="@+id/refresh"
+        android:title="@string/refresh_data"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="never"
+        android:contentDescription="@string/refresh_data"/>
+
 </menu>
