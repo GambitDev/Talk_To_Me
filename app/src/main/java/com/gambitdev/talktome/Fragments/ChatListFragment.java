@@ -1,30 +1,35 @@
 package com.gambitdev.talktome.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ChatListAdapter;
-import com.gambitdev.talktome.DataManager.ContactsViewModel;
+import com.gambitdev.talktome.DataManager.MyViewModel;
 import com.gambitdev.talktome.Dialogs.ChatListOptionsBottomSheet;
 import com.gambitdev.talktome.Interfaces.OnChatClicked;
 import com.gambitdev.talktome.Interfaces.OnChatListOptions;
 import com.gambitdev.talktome.Models.ChatListItem;
 import com.gambitdev.talktome.Models.Contact;
+import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,6 +41,7 @@ public class ChatListFragment extends Fragment
     private Context mContext;
     private ChatListAdapter adapter;
     private List<Contact> contactList;
+    private List<User> userList;
     private FirebaseRecyclerOptions<ChatListItem> options;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -57,23 +63,40 @@ public class ChatListFragment extends Fragment
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ContactsViewModel viewModel = new ViewModelProvider(this)
-                .get(ContactsViewModel.class);
+        MyViewModel viewModel = new ViewModelProvider(this)
+                .get(MyViewModel.class);
         viewModel.getAllContacts().observe(getViewLifecycleOwner() , contacts ->
                 contactList = contacts);
+        viewModel.getAllUsers().observe(getViewLifecycleOwner(), users ->
+                userList = users);
+
         if (mAuth.getCurrentUser() != null) {
             String userUid = mAuth.getCurrentUser().getUid();
             DatabaseReference userChatRef = db.getReference()
                     .child("users").child(userUid).child("chats");
             options = new FirebaseRecyclerOptions.Builder<ChatListItem>()
-                    .setQuery(userChatRef, snapshot -> {
-                        Contact currentContact = getContactById(snapshot.getKey());
-                        return new ChatListItem(
-                                currentContact != null ? currentContact.getUid() : null,
-                                currentContact != null ? currentContact.getName() : null,
-                                snapshot.child("last_msg").child("txtMsg").getValue(String.class),
-                                currentContact != null ? currentContact.getProfilePicUrl() : null
-                        );
+                    .setQuery(userChatRef, new SnapshotParser<ChatListItem>() {
+                        @NonNull
+                        @Override
+                        public ChatListItem parseSnapshot(@NonNull DataSnapshot snapshot) {
+                            Contact currentContact = getContactById(snapshot.getKey());
+                            if (currentContact != null) {
+                                return new ChatListItem(currentContact.getUid(),
+                                        currentContact.getName(),
+                                        currentContact.getPhoneNumber(),
+                                        snapshot.child("last_msg").child("txtMsg").getValue(String.class),
+                                        currentContact.getProfilePicUrl(),
+                                        true);
+                            } else {
+                                User currentUser = getUserById(snapshot.getKey());
+                                return new ChatListItem(currentUser.getUid(),
+                                        currentUser.getPhoneNumber(),
+                                        currentUser.getPhoneNumber(),
+                                        snapshot.child("last_msg").child("txtMsg").getValue(String.class),
+                                        currentUser.getProfilePicUrl(),
+                                        false);
+                            }
+                        }
                     })
                     .build();
         }
@@ -87,6 +110,13 @@ public class ChatListFragment extends Fragment
     private Contact getContactById (String uid) {
         for (Contact contact : contactList) {
             if (contact.getUid().equals(uid)) return contact;
+        }
+        return null;
+    }
+
+    private User getUserById (String uid) {
+        for (User user : userList) {
+            if (user.getUid().equals(uid)) return user;
         }
         return null;
     }
@@ -114,8 +144,9 @@ public class ChatListFragment extends Fragment
     }
 
     @Override
-    public void onLongClicked(String uid) {
-        ChatListOptionsBottomSheet bottomSheet = ChatListOptionsBottomSheet.newInstance(uid);
+    public void onLongClicked(String uid , boolean isContact , String phoneNumber) {
+        ChatListOptionsBottomSheet bottomSheet = ChatListOptionsBottomSheet
+                .newInstance(uid , isContact , phoneNumber);
         bottomSheet.setListener(this);
         bottomSheet.show(getParentFragmentManager() , "chat_options_dialog");
     }
@@ -130,5 +161,13 @@ public class ChatListFragment extends Fragment
                     .child(uid);
             userChatRef.removeValue();
         }
+    }
+
+    @Override
+    public void addContact(String phoneNumber) {
+        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, phoneNumber);
+        startActivity(intent);
     }
 }

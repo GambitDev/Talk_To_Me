@@ -19,6 +19,20 @@
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/tv_add_contact"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="@android:color/white"
+        android:drawablePadding="32dp"
+        android:drawableStart="@drawable/ic_person_black"
+        android:gravity="start|center_vertical"
+        android:text="@string/add_contact"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <TextView
         android:id="@+id/tv_btn_delete_chat"
         android:layout_width="match_parent"
         android:layout_height="48dp"

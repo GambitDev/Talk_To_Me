@@ -61,7 +61,7 @@ public class UserProfileActivity extends AppCompatActivity
         userImg.setOnClickListener(v -> {
             Intent goToViewImg = new Intent(UserProfileActivity.this,
                     ViewImageActivity.class);
-            goToViewImg.putExtra("img_url" , user.getProfilePic());
+            goToViewImg.putExtra("img_url" , user.getProfilePicUrl());
             startActivity(goToViewImg);
         });
         TextView status = findViewById(R.id.status);
@@ -71,8 +71,8 @@ public class UserProfileActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
                 if (user != null) {
-                    if (user.getProfilePic() != null)
-                        Picasso.get().load(user.getProfilePic()).into(userImg);
+                    if (user.getProfilePicUrl() != null)
+                        Picasso.get().load(user.getProfilePicUrl()).into(userImg);
                     if (user.getStatus() != null)
                         status.setText(user.getStatus());
                 }
@@ -167,7 +167,7 @@ public class UserProfileActivity extends AppCompatActivity
 
                                 }
                             });
-                            user.setProfilePic(downloadUrl);
+                            user.setProfilePicUrl(downloadUrl);
                             reference.setValue(user);
                         }
 
@@ -200,7 +200,7 @@ public class UserProfileActivity extends AppCompatActivity
     @Override
     public void onRemoveImgClicked() {
         userImg.setImageDrawable(getDrawable(R.drawable.profile_pic_default));
-        user.setProfilePic(null);
+        user.setProfilePicUrl(null);
         reference.setValue(user);
     }
 

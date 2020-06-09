@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,19 +32,15 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         this.context = context;
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        if (getItem(position).getContactName() == null) return 0;
-//        else return 1;
-//    }
-
     @Override
     protected void onBindViewHolder(@NonNull ChatListItemViewHolder holder, int position, @NonNull ChatListItem model) {
         holder.contactName.setText(model.getContactName());
         holder.contactName.setOnClickListener(v ->
                 listener.onDisplayNameClick(model.getUid() , model.getContactName()));
         holder.contactName.setOnLongClickListener(v -> {
-            listener.onLongClicked(model.getUid());
+            listener.onLongClicked(model.getUid(),
+                    model.isInPhoneContacts(),
+                    model.getPhoneNumber());
             return true;
         });
         if (!model.getLastMsg().isEmpty()) {
@@ -54,7 +51,9 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         holder.lastMsg.setOnClickListener(v ->
                 listener.onDisplayNameClick(model.getUid() , model.getContactName()));
         holder.lastMsg.setOnLongClickListener(v -> {
-            listener.onLongClicked(model.getUid());
+            listener.onLongClicked(model.getUid(),
+                    model.isInPhoneContacts(),
+                    model.getPhoneNumber());
             return true;
         });
         if (model.getProfilePicUrl() != null)
@@ -62,7 +61,9 @@ public class ChatListAdapter extends FirebaseRecyclerAdapter<ChatListItem , Chat
         holder.profilePic.setOnClickListener(v ->
                 listener.onProfilePicClick(model.getUid()));
         holder.profilePic.setOnLongClickListener(v -> {
-            listener.onLongClicked(model.getUid());
+            listener.onLongClicked(model.getUid(),
+                    model.isInPhoneContacts(),
+                    model.getPhoneNumber());
             return true;
         });
     }

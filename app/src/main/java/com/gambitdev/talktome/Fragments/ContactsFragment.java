@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ContactsAdapter;
-import com.gambitdev.talktome.DataManager.ContactsViewModel;
+import com.gambitdev.talktome.DataManager.MyViewModel;
 import com.gambitdev.talktome.Interfaces.OnContactClick;
 import com.gambitdev.talktome.R;
 
@@ -46,7 +46,7 @@ public class ContactsFragment extends Fragment
         ContactsAdapter adapter = new ContactsAdapter();
         adapter.setClickListener(this);
         contactList.setAdapter(adapter);
-        ContactsViewModel viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
+        MyViewModel viewModel = new ViewModelProvider(this).get(MyViewModel.class);
         viewModel.getAllContacts().observe(getViewLifecycleOwner(),
                 adapter::setContacts);
     }

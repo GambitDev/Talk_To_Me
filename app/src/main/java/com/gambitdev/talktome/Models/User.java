@@ -1,21 +1,35 @@
 package com.gambitdev.talktome.Models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "users")
 public class User {
 
+    @NonNull
+    @PrimaryKey
     private String uid;
+
     private String phoneNumber;
     private String profilePicUrl;
     private String status;
 
+    @Ignore
     public User() {
 
     }
 
-    public User(String uid, String phoneNumber) {
+    public User(@NonNull String uid, String phoneNumber,
+                String profilePicUrl, String status) {
         this.uid = uid;
         this.phoneNumber = phoneNumber;
+        this.profilePicUrl = profilePicUrl;
+        this.status = status;
     }
 
+    @NonNull
     public String getUid() {
         return uid;
     }
@@ -32,11 +46,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getProfilePic() {
+    public String getProfilePicUrl() {
         return profilePicUrl;
     }
 
-    public void setProfilePic(String profilePicUrl) {
+    public void setProfilePicUrl(String profilePicUrl) {
         this.profilePicUrl = profilePicUrl;
     }
 

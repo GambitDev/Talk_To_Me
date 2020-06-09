@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Dao
-abstract class ContactsDao {
+abstract class MyDao {
 
     @Query("SELECT * FROM contacts")
     abstract LiveData<List<Contact>> getAllContacts();
 
     @Query("DELETE FROM contacts")
-    abstract void deleteAll();
+    abstract void deleteAllContacts();
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     abstract void insertContact(Contact contact);
@@ -30,6 +30,22 @@ abstract class ContactsDao {
     void insertContactList(List<Contact> contacts) {
         for (Contact contact : contacts) {
             insertContact(contact);
+        }
+    }
+
+    @Query("SELECT * FROM users")
+    abstract LiveData<List<User>> getAllUsers();
+
+    @Query("DELETE FROM users")
+    abstract void deleteAllUsers();
+
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
+    abstract void insertUser(User user);
+
+    @Transaction
+    void insertUserList(List<User> users) {
+        for (User user : users) {
+            insertUser(user);
         }
     }
 }

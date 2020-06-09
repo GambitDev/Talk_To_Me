@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -17,7 +16,7 @@ import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.Models.PhoneContact;
 import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
-import com.gambitdev.talktome.DataManager.ContactsViewModel;
+import com.gambitdev.talktome.DataManager.MyViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,15 +39,16 @@ public class LoadContactsActivity extends AppCompatActivity
     private final static int REQUEST_CONTACTS_ACCESS = 0;
     private List<PhoneContact> phoneContacts;
     private List<User> users = new ArrayList<>();
-    private ContactsViewModel viewModel;
+    private MyViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_contacts);
 
-        viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
-        viewModel.deleteAll();
+        viewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        viewModel.deleteAllContacts();
+        viewModel.deleteAllUsers();
 
         listener = new ValueEventListener() {
             @Override
@@ -57,6 +57,7 @@ public class LoadContactsActivity extends AppCompatActivity
                     User user = child.getValue(User.class);
                     users.add(user);
                 }
+                viewModel.insertUserList(users);
                 if (phoneContacts != null) {
                     List<Contact> registeredContacts = getRegisteredContacts();
                     viewModel.insertContactList(registeredContacts);
@@ -160,7 +161,7 @@ public class LoadContactsActivity extends AppCompatActivity
                     String contactName = phoneContact.getName();
                     String contactPhone = phoneContact.getPhoneNumber();
                     String uid = users.get(i).getUid();
-                    String profilePic = users.get(i).getProfilePic();
+                    String profilePic = users.get(i).getProfilePicUrl();
                     String status = users.get(i).getStatus();
                     return new Contact(uid, contactName, contactPhone, profilePic, status);
                 }

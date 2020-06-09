@@ -1,19 +1,22 @@
 package com.gambitdev.talktome.Models;
 
-import android.graphics.Bitmap;
-
 public class ChatListItem {
 
     private String uid;
     private String contactName;
+    private String phoneNumber;
     private String lastMsg;
     private String profilePicUrl;
+    private boolean inPhoneContacts;
 
-    public ChatListItem(String uid, String contactName, String lastMsg, String profilePicUrl) {
+    public ChatListItem(String uid, String contactName, String phoneNumber,
+                        String lastMsg, String profilePicUrl, boolean inPhoneContacts) {
         this.uid = uid;
         this.contactName = contactName;
+        this.phoneNumber = phoneNumber;
         this.lastMsg = lastMsg;
         this.profilePicUrl = profilePicUrl;
+        this.inPhoneContacts = inPhoneContacts;
     }
 
     public String getUid() {
@@ -46,5 +49,17 @@ public class ChatListItem {
 
     public void setProfilePicUrl(String profilePicUrl) {
         this.profilePicUrl = profilePicUrl;
+    }
+
+    public boolean isInPhoneContacts() {
+        return inPhoneContacts;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

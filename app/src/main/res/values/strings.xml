@@ -52,4 +52,5 @@
     <string name="cancel">Cancel</string>
     <string name="no_camera_on_device">This feature requires a camera</string>
     <string name="storage_permission_rational">Access to external storage is necessary to access gallery.</string>
+    <string name="add_contact">Add As Contact</string>
 </resources>

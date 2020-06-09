@@ -116,7 +116,7 @@ public class VerificationActivity extends AppCompatActivity {
     private void addUserToDatabase() {
         if (mAuth.getCurrentUser() != null) {
             User user = new User(mAuth.getCurrentUser().getUid(),
-                    mAuth.getCurrentUser().getPhoneNumber());
+                    mAuth.getCurrentUser().getPhoneNumber(), null, null);
             ref.child(mAuth.getCurrentUser().getUid()).setValue(user);
         }
     }
