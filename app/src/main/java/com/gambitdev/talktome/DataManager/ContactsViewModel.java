@@ -14,15 +14,25 @@ import java.util.List;
 public class ContactsViewModel extends AndroidViewModel {
 
     private ContactsRepository repository;
+    private LiveData<List<Contact>> contacts;
 
     public ContactsViewModel(@NonNull Application application) {
         super(application);
 
         repository = new ContactsRepository(application);
+        contacts = repository.getAllContacts();
+    }
+
+    public void deleteAll(){
+        repository.deleteAll();
     }
 
     public LiveData<List<Contact>> getAllContacts() {
-        return repository.getAllContacts();
+        return contacts;
+    }
+
+    public void insertContact(Contact contact) {
+        repository.insertContact(contact);
     }
 
     public void insertContactList(List<Contact> contacts) {

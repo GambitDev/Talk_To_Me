@@ -20,8 +20,19 @@ class ContactsRepository {
         contacts = contactsDao.getAllContacts();
     }
 
+    void deleteAll(){
+        ContactsDatabase.databaseWriteExecutor.execute(() ->
+                contactsDao.deleteAll());
+
+    }
+
     LiveData<List<Contact>> getAllContacts() {
         return contacts;
+    }
+
+    void insertContact(Contact contact) {
+        ContactsDatabase.databaseWriteExecutor.execute(() ->
+                contactsDao.insertContact(contact));
     }
 
     void insertContactList(List<Contact> contacts) {

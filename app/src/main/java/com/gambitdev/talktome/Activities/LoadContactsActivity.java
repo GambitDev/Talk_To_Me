@@ -18,6 +18,7 @@ import com.gambitdev.talktome.Models.PhoneContact;
 import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
 import com.gambitdev.talktome.DataManager.ContactsViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +48,7 @@ public class LoadContactsActivity extends AppCompatActivity
         setContentView(R.layout.activity_load_contacts);
 
         viewModel = new ViewModelProvider(this).get(ContactsViewModel.class);
+        viewModel.deleteAll();
 
         listener = new ValueEventListener() {
             @Override
@@ -151,13 +153,17 @@ public class LoadContactsActivity extends AppCompatActivity
         String currentContactPhoneNumber = cleanPhoneNumber(phoneContact.getPhoneNumber());
         for (int i = 0; i < users.size(); i++) {
             String currentRegisteredUserPhoneNumber = cleanPhoneNumber(users.get(i).getPhoneNumber());
-            if (currentContactPhoneNumber.equals(currentRegisteredUserPhoneNumber)) {
-                String contactName = phoneContact.getName();
-                String contactPhone = phoneContact.getPhoneNumber();
-                String uid = users.get(i).getUid();
-                String profilePic = users.get(i).getProfilePic();
-                String status = users.get(i).getStatus();
-                return new Contact(uid, contactName, contactPhone, profilePic, status);
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            if (mAuth.getCurrentUser() != null) {
+                if (currentContactPhoneNumber.equals(currentRegisteredUserPhoneNumber)
+                        && !users.get(i).getUid().equals(mAuth.getCurrentUser().getUid())) {
+                    String contactName = phoneContact.getName();
+                    String contactPhone = phoneContact.getPhoneNumber();
+                    String uid = users.get(i).getUid();
+                    String profilePic = users.get(i).getProfilePic();
+                    String status = users.get(i).getStatus();
+                    return new Contact(uid, contactName, contactPhone, profilePic, status);
+                }
             }
         }
         return null;

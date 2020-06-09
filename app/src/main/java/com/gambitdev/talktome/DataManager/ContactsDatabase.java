@@ -15,7 +15,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {Contact.class} , version = 3 , exportSchema = false)
-@TypeConverters({Converters.class})
 abstract class ContactsDatabase extends RoomDatabase {
 
     abstract ContactsDao contactsDao();

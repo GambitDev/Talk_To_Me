@@ -15,17 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Dao
-interface ContactsDao {
+abstract class ContactsDao {
 
     @Query("SELECT * FROM contacts")
-    LiveData<List<Contact>> getAllContacts();
+    abstract LiveData<List<Contact>> getAllContacts();
 
     @Query("DELETE FROM contacts")
-    void deleteAll();
-
-    @Insert (onConflict = OnConflictStrategy.IGNORE)
-    void insertContact(Contact contact);
+    abstract void deleteAll();
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    void insertContactList(List<Contact> contacts);
+    abstract void insertContact(Contact contact);
+
+    @Transaction
+    void insertContactList(List<Contact> contacts) {
+        for (Contact contact : contacts) {
+            insertContact(contact);
+        }
+    }
 }
