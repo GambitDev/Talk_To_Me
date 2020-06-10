@@ -15,9 +15,10 @@
         android:text="@string/verify_your_phone_number"
         android:textSize="50sp"
         android:textStyle="bold"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textColor="@color/colorPrimaryDark"
         android:gravity="center"/>
 
     <TextView
@@ -32,28 +33,40 @@
         android:textSize="20sp"
         android:gravity="center"/>
 
-    <EditText
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/footer_bg"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"/>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/verification_code_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_your_code_here"
-        android:layout_marginTop="28dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/verification_msg"
-        android:importantForAutofill="no"
-        android:inputType="number" />
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        app:errorTextColor="@color/colorPrimaryDarker"
+        app:errorIconTint="@color/colorPrimaryDarker"
+        app:layout_constraintBottom_toTopOf="@id/verification_btn">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/verification_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/verification_code_et"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:textAllCaps="false"
-        android:layout_marginTop="28dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:text="@string/verify"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

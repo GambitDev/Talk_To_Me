@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp">
 
-    <TextView
-        android:id="@+id/tv_bottom_sheet_heading"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginStart="16dp"
-        android:gravity="center"
-        android:text="@string/share_your_thoughts"
-        android:textColor="@color/grey"
-        android:textSize="16sp" />
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_bottom_sheet_heading"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:layout_marginEnd="56dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text="@string/share_your_thoughts"-->
+<!--        android:textColor="@color/grey"-->
+<!--        android:textSize="16sp" />-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/status_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/status"
+        android:hint="@string/share_your_thoughts"
         app:counterEnabled="true"
         app:counterMaxLength="30"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:errorEnabled="true"
@@ -46,4 +54,6 @@
         android:textAllCaps="false"
         android:text="@string/edit"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

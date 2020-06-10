@@ -27,6 +27,8 @@
 
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
@@ -44,4 +46,5 @@
     <style name="MyActionButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more</item>
     </style>
+
 </resources>

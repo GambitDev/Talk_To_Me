@@ -8,6 +8,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.gambitdev.talktome.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -16,17 +17,18 @@ public class RegisterActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText phoneEt = findViewById(R.id.phoneEt);
+        final TextInputLayout phoneEt = findViewById(R.id.phoneEt);
         Button registerBtn = findViewById(R.id.register_btn);
         registerBtn.setOnClickListener(v -> {
-            String phoneNumber = phoneEt.getText().toString();
-            if (phoneNumber.isEmpty()) {
-                phoneEt.setError(getResources().getString(R.string.phone_number_error));
-            } else {
-                Intent goToVerification = new Intent(RegisterActivity.this , VerificationActivity.class);
-                goToVerification.putExtra("phone_number" , phoneNumber);
-                startActivity(goToVerification);
-                finish();
+            if (phoneEt.getEditText() != null) {
+                String phoneNumber = phoneEt.getEditText().getText().toString();
+                if (phoneNumber.isEmpty()) {
+                    phoneEt.setError(getResources().getString(R.string.phone_number_error));
+                } else {
+                    Intent goToVerification = new Intent(RegisterActivity.this, VerificationActivity.class);
+                    goToVerification.putExtra("phone_number", phoneNumber);
+                    startActivity(goToVerification);
+                }
             }
         });
     }

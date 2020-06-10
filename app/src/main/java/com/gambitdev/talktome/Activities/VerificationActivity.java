@@ -12,6 +12,7 @@ import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class VerificationActivity extends AppCompatActivity {
 
     private String mVerificationId;
-    private EditText verificationCodeEt;
+    private TextInputLayout verificationCodeEt;
     private FirebaseAuth mAuth;
     private DatabaseReference ref;
 
@@ -42,12 +43,14 @@ public class VerificationActivity extends AppCompatActivity {
         sendVerificationCode(phoneNumber);
 
         findViewById(R.id.verification_btn).setOnClickListener(v -> {
-            String code = verificationCodeEt.getText().toString();
-            if (code.length() != 6) {
-                verificationCodeEt.setError(getResources().getString(R.string.code_error));
-                verificationCodeEt.requestFocus();
-            } else {
-                verifyVerificationCode(code);
+            if (verificationCodeEt.getEditText() != null) {
+                String code = verificationCodeEt.getEditText().getText().toString();
+                if (code.length() != 6) {
+                    verificationCodeEt.setError(getResources().getString(R.string.code_error));
+                    verificationCodeEt.requestFocus();
+                } else {
+                    verifyVerificationCode(code);
+                }
             }
         });
     }
@@ -67,8 +70,10 @@ public class VerificationActivity extends AppCompatActivity {
                 public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                     String code = phoneAuthCredential.getSmsCode();
                     if (code != null) {
-                        verificationCodeEt.setText(code);
-                        verifyVerificationCode(code);
+                        if (verificationCodeEt.getEditText() != null) {
+                            verificationCodeEt.getEditText().setText(code);
+                            verifyVerificationCode(code);
+                        }
                     }
                 }
 

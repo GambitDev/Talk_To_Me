@@ -92,7 +92,7 @@
             android:layout_margin="8dp"
             android:src="@drawable/ic_edit"
             android:contentDescription="@string/change_image"
-            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"/>
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
     </LinearLayout>
 

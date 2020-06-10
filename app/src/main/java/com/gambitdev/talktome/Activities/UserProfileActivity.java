@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.gambitdev.talktome.Dialogs.UserImagePickerBottomSheet;
 import com.gambitdev.talktome.Interfaces.OnProfileImgOptions;
 import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
