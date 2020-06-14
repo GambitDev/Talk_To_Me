@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.gambitdev.talktome.Interfaces.OnMessageClick;
 import com.gambitdev.talktome.Models.Message;
 import com.gambitdev.talktome.R;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -181,7 +184,20 @@ public class ChatActivity extends AppCompatActivity
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG)
+                            .show();
+                }
+                if (photoFile != null) {
+                    Uri imgUri = FileProvider.getUriForFile(this,
+                            "com.gambitdev.talktome.provider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         } else {
             EasyPermissions.requestPermissions(this,
@@ -189,6 +205,23 @@ public class ChatActivity extends AppCompatActivity
                     GET_CAMERA_PERMISSION,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+    }
+
+    private String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 
     @Override
@@ -204,6 +237,11 @@ public class ChatActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == REQUEST_LOAD_IMG) {
                 Uri selectedImgUri = data.getData();
+                Intent goToSendImg = new Intent(ChatActivity.this , SendImageActivity.class);
+                goToSendImg.putExtra("img" , selectedImgUri);
+                startActivityForResult(goToSendImg , REQUEST_SEND_IMG);
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Uri selectedImgUri = Uri.parse(mCurrentPhotoPath);
                 Intent goToSendImg = new Intent(ChatActivity.this , SendImageActivity.class);
                 goToSendImg.putExtra("img" , selectedImgUri);
                 startActivityForResult(goToSendImg , REQUEST_SEND_IMG);

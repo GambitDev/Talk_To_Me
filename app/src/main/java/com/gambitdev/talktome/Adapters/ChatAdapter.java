@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class ChatAdapter extends FirebaseRecyclerAdapter <Message , ChatAdapter.MsgViewHolder> {
 
     private String userUid;

@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true">
         <activity android:name=".Activities.ContactProfileActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
@@ -65,7 +66,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.gambitdev.talktome.fileprovider"
+            android:authorities="com.gambitdev.talktome.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
