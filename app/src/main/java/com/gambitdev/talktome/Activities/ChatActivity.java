@@ -78,19 +78,19 @@ public class ChatActivity extends AppCompatActivity
 
     private void initializeActivity() {
         mAuth = FirebaseAuth.getInstance();
-        DatabaseReference usersRef = db.getReference().child("users");
+        DatabaseReference chatsRef = db.getReference().child("chats");
 
         String contactUid = getIntent().getStringExtra("contact_uid");
         if (contactUid != null) {
             if (mAuth.getCurrentUser() != null) {
-                userChatRef = usersRef.child(mAuth.getCurrentUser().getUid())
-                        .child("chats").child(contactUid).child("messages");
-                userLastMsgRef = usersRef.child(mAuth.getCurrentUser().getUid())
-                        .child("chats").child(contactUid).child("last_msg");
-                contactChatRef = usersRef.child(contactUid)
-                        .child("chats").child(mAuth.getCurrentUser().getUid()).child("messages");
-                contactLastMsgRef = usersRef.child(contactUid)
-                        .child("chats").child(mAuth.getCurrentUser().getUid()).child("last_msg");
+                userChatRef = chatsRef.child(mAuth.getCurrentUser().getUid())
+                        .child(contactUid).child("messages");
+                userLastMsgRef = chatsRef.child(mAuth.getCurrentUser().getUid())
+                        .child(contactUid).child("last_msg");
+                contactChatRef = chatsRef.child(contactUid)
+                        .child(mAuth.getCurrentUser().getUid()).child("messages");
+                contactLastMsgRef = chatsRef.child(contactUid)
+                        .child(mAuth.getCurrentUser().getUid()).child("last_msg");
                 options = new FirebaseRecyclerOptions.Builder<Message>()
                                 .setQuery(userChatRef, snapshot -> new Message(
                                         snapshot.child("senderUid").getValue(String.class),
@@ -314,9 +314,8 @@ public class ChatActivity extends AppCompatActivity
     public void deleteChat(String uid) {
         if (mAuth.getCurrentUser() != null) {
             DatabaseReference userChatRef = db.getReference()
-                    .child("users")
-                    .child(mAuth.getCurrentUser().getUid())
                     .child("chats")
+                    .child(mAuth.getCurrentUser().getUid())
                     .child(uid);
             userChatRef.removeValue();
             finish();

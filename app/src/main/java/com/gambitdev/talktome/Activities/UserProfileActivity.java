@@ -3,11 +3,15 @@ package com.gambitdev.talktome.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +36,12 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -42,6 +51,8 @@ public class UserProfileActivity extends AppCompatActivity
 
     private static final int GET_IMAGE_PERMISSION = 1;
     private static final int REQUEST_LOAD_IMG = 2;
+    private static final int GET_CAMERA_PERMISSION = 3;
+    private static final int REQUEST_IMAGE_CAPTURE = 4;
 
     User user;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -122,6 +133,52 @@ public class UserProfileActivity extends AppCompatActivity
         }
     }
 
+    @AfterPermissionGranted(GET_CAMERA_PERMISSION)
+    private void requestCamera() {
+        if (EasyPermissions.hasPermissions(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG)
+                            .show();
+                }
+                if (photoFile != null) {
+                    Uri imgUri = FileProvider.getUriForFile(this,
+                            "com.gambitdev.talktome.provider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        } else {
+            EasyPermissions.requestPermissions(this,
+                    getResources().getString(R.string.storage_permission_rational),
+                    GET_CAMERA_PERMISSION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    private String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -135,6 +192,10 @@ public class UserProfileActivity extends AppCompatActivity
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == REQUEST_LOAD_IMG) {
                 Uri selectedImg = data.getData();
+                findViewById(R.id.progress).setVisibility(View.VISIBLE);
+                uploadImg(selectedImg);
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Uri selectedImg = Uri.parse(mCurrentPhotoPath);
                 findViewById(R.id.progress).setVisibility(View.VISIBLE);
                 uploadImg(selectedImg);
             }
@@ -183,6 +244,7 @@ public class UserProfileActivity extends AppCompatActivity
 
     @Override
     public void onEditStatusBtnClicked(String status) {
+        ((TextView)findViewById(R.id.status)).setText(status);
         if (user != null) {
             user.setStatus(status);
             reference.setValue(user);
@@ -191,7 +253,13 @@ public class UserProfileActivity extends AppCompatActivity
 
     @Override
     public void onImgFromCameraClicked() {
-
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            Toast.makeText(this,
+                    getResources().getString(R.string.no_camera_on_device),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        requestCamera();
     }
 
     @Override

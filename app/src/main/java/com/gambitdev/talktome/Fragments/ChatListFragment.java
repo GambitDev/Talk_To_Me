@@ -3,21 +3,18 @@ package com.gambitdev.talktome.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.gambitdev.talktome.Activities.HomeActivity;
 import com.gambitdev.talktome.Adapters.ChatListAdapter;
 import com.gambitdev.talktome.DataManager.MyViewModel;
@@ -29,7 +26,6 @@ import com.gambitdev.talktome.Models.Contact;
 import com.gambitdev.talktome.Models.User;
 import com.gambitdev.talktome.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -73,29 +69,25 @@ public class ChatListFragment extends Fragment
         if (mAuth.getCurrentUser() != null) {
             String userUid = mAuth.getCurrentUser().getUid();
             DatabaseReference userChatRef = db.getReference()
-                    .child("users").child(userUid).child("chats");
+                    .child("chats").child(userUid);
             options = new FirebaseRecyclerOptions.Builder<ChatListItem>()
-                    .setQuery(userChatRef, new SnapshotParser<ChatListItem>() {
-                        @NonNull
-                        @Override
-                        public ChatListItem parseSnapshot(@NonNull DataSnapshot snapshot) {
-                            Contact currentContact = getContactById(snapshot.getKey());
-                            if (currentContact != null) {
-                                return new ChatListItem(currentContact.getUid(),
-                                        currentContact.getName(),
-                                        currentContact.getPhoneNumber(),
-                                        snapshot.child("last_msg").child("txtMsg").getValue(String.class),
-                                        currentContact.getProfilePicUrl(),
-                                        true);
-                            } else {
-                                User currentUser = getUserById(snapshot.getKey());
-                                return new ChatListItem(currentUser.getUid(),
-                                        currentUser.getPhoneNumber(),
-                                        currentUser.getPhoneNumber(),
-                                        snapshot.child("last_msg").child("txtMsg").getValue(String.class),
-                                        currentUser.getProfilePicUrl(),
-                                        false);
-                            }
+                    .setQuery(userChatRef, snapshot -> {
+                        Contact currentContact = getContactById(snapshot.getKey());
+                        if (currentContact != null) {
+                            return new ChatListItem(currentContact.getUid(),
+                                    currentContact.getName(),
+                                    currentContact.getPhoneNumber(),
+                                    snapshot.child("last_msg").child("txtMsg").getValue(String.class),
+                                    currentContact.getProfilePicUrl(),
+                                    true);
+                        } else {
+                            User currentUser = getUserById(snapshot.getKey());
+                            return new ChatListItem(currentUser.getUid(),
+                                    currentUser.getPhoneNumber(),
+                                    currentUser.getPhoneNumber(),
+                                    snapshot.child("last_msg").child("txtMsg").getValue(String.class),
+                                    currentUser.getProfilePicUrl(),
+                                    false);
                         }
                     })
                     .build();
@@ -155,9 +147,8 @@ public class ChatListFragment extends Fragment
     public void deleteChat(String uid) {
         if (mAuth.getCurrentUser() != null) {
             DatabaseReference userChatRef = db.getReference()
-                    .child("users")
-                    .child(mAuth.getCurrentUser().getUid())
                     .child("chats")
+                    .child(mAuth.getCurrentUser().getUid())
                     .child(uid);
             userChatRef.removeValue();
         }
