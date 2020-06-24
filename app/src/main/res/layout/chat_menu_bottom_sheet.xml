@@ -31,6 +31,19 @@
         android:text="@string/show_contact"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/tv_btn_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="@android:color/white"
+        android:drawablePadding="32dp"
+        android:drawableStart="@drawable/ic_image"
+        android:gravity="start|center_vertical"
+        android:text="@string/media_gallery"
+        android:textSize="16sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

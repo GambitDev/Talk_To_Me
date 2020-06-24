@@ -26,8 +26,8 @@
     <string name="message">Message</string>
     <string name="delete_chat">Delete Chat</string>
     <string name="show_contact">Show Contact</string>
-    <string name="loading_contacts">Loading Contacts...</string>
-    <string name="loading_chats">Loading Chats...</string>
+    <string name="loading_contacts">Loading Contacts…</string>
+    <string name="loading_chats">Loading Chats…</string>
     <string name="profile_pic">Profile Pic</string>
     <string name="img_msg_display">Image</string>
     <string name="go_back">Go Back</string>
@@ -53,4 +53,6 @@
     <string name="no_camera_on_device">This feature requires a camera</string>
     <string name="storage_permission_rational">Access to external storage is necessary to access gallery.</string>
     <string name="add_contact">Add As Contact</string>
+    <string name="image">Image</string>
+    <string name="media_gallery">Media Gallery</string>
 </resources>

@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +26,6 @@ import com.gambitdev.talktome.Interfaces.OnMessageClick;
 import com.gambitdev.talktome.Models.Message;
 import com.gambitdev.talktome.R;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +59,7 @@ public class ChatActivity extends AppCompatActivity
     private RecyclerView msgList;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private String contactUid;
 
     private static final int GET_IMAGE_PERMISSION = 1;
     private static final int REQUEST_LOAD_IMG = 2;
@@ -80,7 +79,7 @@ public class ChatActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         DatabaseReference chatsRef = db.getReference().child("chats");
 
-        String contactUid = getIntent().getStringExtra("contact_uid");
+        contactUid = getIntent().getStringExtra("contact_uid");
         if (contactUid != null) {
             if (mAuth.getCurrentUser() != null) {
                 userChatRef = chatsRef.child(mAuth.getCurrentUser().getUid())
@@ -214,7 +213,11 @@ public class ChatActivity extends AppCompatActivity
                 Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+                "Talk To Me");
+        if (!storageDir.exists()) {
+            if (storageDir.mkdir())
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
         File image = File.createTempFile(
                 imageFileName,  // prefix
                 ".jpg",         // suffix
@@ -239,11 +242,13 @@ public class ChatActivity extends AppCompatActivity
                 Uri selectedImgUri = data.getData();
                 Intent goToSendImg = new Intent(ChatActivity.this , SendImageActivity.class);
                 goToSendImg.putExtra("img" , selectedImgUri);
+                goToSendImg.putExtra("contact_uid", contactUid);
                 startActivityForResult(goToSendImg , REQUEST_SEND_IMG);
             } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 Uri selectedImgUri = Uri.parse(mCurrentPhotoPath);
                 Intent goToSendImg = new Intent(ChatActivity.this , SendImageActivity.class);
                 goToSendImg.putExtra("img" , selectedImgUri);
+                goToSendImg.putExtra("contact_uid", contactUid);
                 startActivityForResult(goToSendImg , REQUEST_SEND_IMG);
             } else if (requestCode == REQUEST_SEND_IMG) {
                 String msgJson = data.getStringExtra("msg_json");
@@ -308,6 +313,14 @@ public class ChatActivity extends AppCompatActivity
                 ContactProfileActivity.class);
         goToContactProfile.putExtra("contact_uid" , uid);
         startActivity(goToContactProfile);
+    }
+
+    @Override
+    public void goToGallery(String uid) {
+        Intent goToGallery = new Intent(ChatActivity.this,
+                GalleryActivity.class);
+        goToGallery.putExtra("contact_uid", uid);
+        startActivity(goToGallery);
     }
 
     @Override

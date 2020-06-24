@@ -20,23 +20,11 @@ public class Message{
         return senderUid;
     }
 
-    public void setSenderUid(String senderUid) {
-        this.senderUid = senderUid;
-    }
-
     public String getTxtMsg() {
         return txtMsg;
     }
 
-    public void setTxtMsg(String txtMsg) {
-        this.txtMsg = txtMsg;
-    }
-
     public String getImgUrl() {
         return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 }

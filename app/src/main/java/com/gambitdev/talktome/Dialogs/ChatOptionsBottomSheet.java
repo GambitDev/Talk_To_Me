@@ -41,6 +41,10 @@ public class ChatOptionsBottomSheet extends BottomSheetDialogFragment {
             listener.showContact(uid);
             dismiss();
         });
+        view.findViewById(R.id.tv_btn_gallery).setOnClickListener(v -> {
+            listener.goToGallery(uid);
+            dismiss();
+        });
         view.findViewById(R.id.delete_btn).setOnClickListener(v -> {
             listener.deleteChat(uid);
             dismiss();

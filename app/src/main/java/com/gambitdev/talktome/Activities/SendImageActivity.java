@@ -17,6 +17,8 @@ import com.gambitdev.talktome.Models.Message;
 import com.gambitdev.talktome.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -29,9 +31,11 @@ public class SendImageActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private StorageReference reference = storage.getReference().child("images");
+    private StorageReference storageRef = storage.getReference().child("images");
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference dbRef = db.getReference().child("images");
 
-    int clickCounter;
+    private int clickCounter;
     private ProgressBar progressBar;
 
     @Override
@@ -42,6 +46,8 @@ public class SendImageActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.send_progress);
 
         Uri imgUri = getIntent().getParcelableExtra("img");
+        String contactUid = getIntent().getStringExtra("contact_uid");
+
         ImageView img = findViewById(R.id.img);
         img.setImageBitmap(getImgBitmap(imgUri));
 
@@ -54,16 +60,17 @@ public class SendImageActivity extends AppCompatActivity {
         TextInputLayout captionEt = findViewById(R.id.caption_et);
         captionEt.setEndIconOnClickListener(v -> {
             if (clickCounter == 1) return;
+            clickCounter++;
             progressBar.setVisibility(View.VISIBLE);
             if (imgUri != null) {
                 if (imgUri.getLastPathSegment() != null) {
-                    reference = reference.child(imgUri.getLastPathSegment());
-                    UploadTask uploadTask = reference.putFile(imgUri);
+                    storageRef = storageRef.child(imgUri.getLastPathSegment());
+                    UploadTask uploadTask = storageRef.putFile(imgUri);
                     uploadTask.continueWithTask(task -> {
                         if (!task.isSuccessful()) {
                             Toast.makeText(SendImageActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
-                        return reference.getDownloadUrl();
+                        return storageRef.getDownloadUrl();
                     }).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             String downloadUrl;
@@ -74,9 +81,18 @@ public class SendImageActivity extends AppCompatActivity {
                                     caption = captionEt.getEditText().getText().toString();
                                     Message newMsg;
                                     if (mAuth.getCurrentUser() != null) {
-                                        newMsg = new Message(mAuth.getCurrentUser().getUid(), caption, downloadUrl);
+                                        newMsg = new Message(mAuth.getCurrentUser().getUid(),
+                                                caption, downloadUrl);
+                                        if (contactUid != null) {
+                                            dbRef.child(mAuth.getCurrentUser().getUid())
+                                                    .child(contactUid).push().setValue(downloadUrl);
+                                            dbRef.child(contactUid)
+                                                    .child(mAuth.getCurrentUser().getUid())
+                                                    .push().setValue(downloadUrl);
+                                        }
                                         String msgJSON = new Gson().toJson(newMsg);
-                                        Intent resultData = new Intent().putExtra("msg_json", msgJSON);
+                                        Intent resultData = new Intent().
+                                                putExtra("msg_json", msgJSON);
                                         setResult(RESULT_OK, resultData);
                                         finish();
                                     }
