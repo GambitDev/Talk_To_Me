@@ -10,9 +10,9 @@
     <ImageView
         android:id="@+id/img"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:src="@drawable/profile_pic_default"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/image" />
+        android:contentDescription="@string/image"/>
 
 </androidx.cardview.widget.CardView>

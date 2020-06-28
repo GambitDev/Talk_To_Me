@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:src="@drawable/profile_pic_default"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:contentDescription="@string/img_msg_display"/>
 
     <ProgressBar
