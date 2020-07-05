@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="10dp"
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    app:strokeColor="@color/colorPrimaryDark">
 
     <ImageView
         android:id="@+id/img"
@@ -15,4 +17,24 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/image"/>
 
-</androidx.cardview.widget.CardView>
+    <RelativeLayout
+        android:id="@+id/selected_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_circle"
+        android:layout_margin="16dp"
+        android:padding="2dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_gravity="end">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/image_selected"/>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -55,4 +55,12 @@
     <string name="add_contact">Add As Contact</string>
     <string name="image">Image</string>
     <string name="media_gallery">Media Gallery</string>
+    <string name="image_selected">Image Selected</string>
+    <string name="delete_selected">Delete Selected</string>
+    <string name="cancel_selection">Cancel selection</string>
+    <string name="img_selection_options_txt">%1d images selected</string>
+    <string name="delete">Delete</string>
+    <string name="delete_images_title">Delete %1d images? Are you sure?</string>
+    <string name="delete_messages_title">Delete %1d messages? Are you sure?</string>
+    <string name="msg_selection_options_txt">%1d messages selected</string>
 </resources>

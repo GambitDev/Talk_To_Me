@@ -19,49 +19,49 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ImageSlideShowActivity"></activity>
+        <activity android:name=".activities.ImageSlideShowActivity"></activity>
         <activity
-            android:name=".Activities.GalleryActivity"
+            android:name=".activities.GalleryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.ContactProfileActivity"
+            android:name=".activities.ContactProfileActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.UserProfileActivity"
+            android:name=".activities.UserProfileActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.ViewImageActivity"
+            android:name=".activities.ViewImageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.SendImageActivity"
+            android:name=".activities.SendImageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.LoadContactsActivity"
+            android:name=".activities.LoadContactsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.ChatActivity"
+            android:name=".activities.ChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.VerificationActivity"
+            android:name=".activities.VerificationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.HomeActivity"
+            android:name=".activities.HomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activities.SplashActivity"
+            android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
