@@ -17,3 +17,4 @@ Media sent in a conversation is saved to a media gallery
 <img src="https://github.com/GambitDev/Talk_To_Me/blob/master/TalkToMe-media-gif.gif" width="300"/>
 
 This project was alot of fun to develop, I learned a great deal along the way.
+Going through commits pushed to this repository will show a process of me getting comfortable with Android SDK and a better developer in general.
