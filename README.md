@@ -1,5 +1,5 @@
 # Talk_To_Me
-A simple messenger app built mainly in Java and Firebase Realtime Database and designed according to Material guidelines.
+A simple messenger app built mainly in Java and Firebase Realtime Database.
 Upon run, the user can register his phone number to the app using Firebase Authentication, when registered,
 the user can send and recieve text and images to and other users that are saved as contacts on their device.
 Images can be selected from device's external memory or captured directly from device's camera.
